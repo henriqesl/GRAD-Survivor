@@ -33,37 +33,6 @@ mesa5 = pygame.Rect((464, 33, 88, 52))
 
 tv = pygame.Rect((308, 4, 185, 4))
 
-#Definindo os retângulos de contato
-
-#Paredes
-parede1 =  pygame.draw.rect(map, 'Red', (0,0,4,600)) #(X, Y, L, H)
-parede2 = pygame.draw.rect(map, 'Red', (796,0,4,600))
-parede3 = pygame.draw.rect(map, 'Red', (0,0,800,4))
-parede4 = pygame.draw.rect(map, 'Red', (0, 595, 800,4))
-
-#Portas
-porta1 = pygame.draw.rect(map, 'Red', (0, 56, 57,3))
-macaneta1 = pygame.draw.rect(map, 'Red', (40,51,12,5))
-
-porta2 = pygame.draw.rect(map,'Red', (743,53,53,3))
-macaneta2 = pygame.draw.rect(map, 'Red', (746, 48, 12, 5))
-
-porta3 = pygame.draw.rect(map, 'Red', (0, 493, 55,3))
-macaneta3 = pygame.draw.rect(map, 'Red', (40,488,12,5))
-
-porta4 = pygame.draw.rect(map, 'Red', (744, 492, 55,3))
-macaneta4 = pygame.draw.rect(map, 'Red', (747,487,12,5))
-
-#Mesas
-mesa1 = pygame.draw.rect(map, 'Red', (0,370,185,80))
-mesa2 = pygame.draw.rect(map, 'Red', (0,173,185,80))
-mesa3 = pygame.draw.rect(map, 'Red', (620,169,185,80))
-mesa4 = pygame.draw.rect(map, 'Red', (620,375,185,80))
-mesa5 = pygame.draw.rect(map, 'Red', (464,33,88,52))
-
-#Tv do grad
-tv = pygame.draw.rect(map, 'Red', (308,4,185,4))
-
 obstaculos = [parede1, parede2, parede3, parede4, porta1, porta2, porta3, porta4, macaneta1, macaneta2, macaneta3, macaneta4, mesa1, mesa2, mesa3, mesa4, mesa5, tv]
 
 # ====== JOGADOR (RETÂNGULO AZUL) ======
@@ -93,7 +62,6 @@ while True:
 
     for obstaculo in obstaculos:
         if player.colliderect(obstaculo):
-            print(f'Colisão no obstáculo: {obstaculo}')
             player.x = prev_x
             player.y = prev_y
 

@@ -1,6 +1,7 @@
 import pygame
 import os
-from mouse import Mouse  # <-- importando a classe Mouse
+from mouse import Mouse
+
 
 pygame.init()
 screen = pygame.display.set_mode((800, 600))
