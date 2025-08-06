@@ -7,7 +7,6 @@ screen = pygame.display.set_mode((800, 600))
 clock = pygame.time.Clock()
 map = pygame.image.load('mapa1.0.png')
 
-
 #Definindo os retângulos de contato
 
 #Paredes
@@ -38,9 +37,6 @@ mesa5 = pygame.draw.rect(map, 'Red', (464,33,88,52))
 
 #Tv inútil do grad
 tv = pygame.draw.rect(map, 'Red', (308,4,185,4))
-
-
-
 
 while True:
     for event in pygame.event.get():

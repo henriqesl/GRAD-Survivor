@@ -1,6 +1,6 @@
 import pygame as pg
 import random
-itens = [];
+itens = []
 
 class Item_Coletavel:
     def __init__(self, funcao, imagens):
