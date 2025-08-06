@@ -1,0 +1,82 @@
+import pygame
+from sys import exit
+import random
+
+class Monstro:
+    def __init__(self, imagem, posicao):
+        self.imagem = imagem
+        self.rect = self.imagem.get_rect(center=posicao)
+
+    def desenhar(self, superficie):
+        superficie.blit(self.imagem, self.rect)
+
+    def seguir_jogador(self, pos_jogador, velocidade=2):
+        dx = pos_jogador[0] - self.rect.centerx
+        dy = pos_jogador[1] - self.rect.centery
+
+        # Move no eixo X até alinhar
+        if dx != 0:
+            passo_x = min(abs(dx), velocidade)
+            self.rect.x += passo_x if dx > 0 else -passo_x
+
+        # Só quando alinhado no X, move no eixo Y
+        elif dy != 0:
+            passo_y = min(abs(dy), velocidade)
+            self.rect.y += passo_y if dy > 0 else -passo_y
+
+pygame.init()
+tela = pygame.display.set_mode((800, 600))
+clock = pygame.time.Clock()
+
+# Personagem
+personagem_costas_original = pygame.image.load('imagens jogo 2/costas.png').convert_alpha()
+personagem_costas = pygame.transform.scale(personagem_costas_original, (50, 50))
+retangulo_personagem_costas = personagem_costas.get_rect(center=(400, 300))
+
+# Mapa
+mapa = pygame.image.load('mapa1.0.png')
+
+# Monstro
+imagem_monstro_original = pygame.image.load('imagens jogo 2/costas.png').convert_alpha()
+imagem_monstro = pygame.transform.scale(imagem_monstro_original, (40, 40))
+monstros = []
+
+# Pontos de spawn
+spawn_points = [(20, 80), (20, 520), (780, 520), (780, 80)]
+
+# Timer para spawnar monstros
+monstro_timer_spawn = pygame.USEREVENT + 1
+pygame.time.set_timer(monstro_timer_spawn, 2000)  # spawn a cada 2 segundos
+
+while True:
+    for evento in pygame.event.get():
+        if evento.type == pygame.QUIT:
+            pygame.quit()
+            exit()
+
+        if evento.type == monstro_timer_spawn:
+            ponto = random.choice(spawn_points)
+            monstros.append(Monstro(imagem_monstro, ponto))
+
+    # Movimento do jogador
+    keys = pygame.key.get_pressed()
+    if keys[pygame.K_w]:
+        retangulo_personagem_costas.top -= 2.5
+    if keys[pygame.K_s]:
+        retangulo_personagem_costas.top += 2.5
+    if keys[pygame.K_a]:
+        retangulo_personagem_costas.left -= 2.5
+    if keys[pygame.K_d]:
+        retangulo_personagem_costas.left += 2.5
+
+    # Desenhar mapa e personagem
+    tela.blit(mapa, (0, 0))
+    tela.blit(personagem_costas, retangulo_personagem_costas)
+
+    # Atualizar e desenhar monstros
+    for monstro in monstros:
+    monstro.seguir_jogador(retangulo_personagem_costas.center)
+    monstro.desenhar(tela)
+
+    pygame.display.update()
+    clock.tick(60)
