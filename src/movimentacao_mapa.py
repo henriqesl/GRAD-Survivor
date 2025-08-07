@@ -1,5 +1,4 @@
-import pygame
-import sys
+from settings import *
 
 pygame.init()
 pygame.display.set_caption("GRAD-Survivor")

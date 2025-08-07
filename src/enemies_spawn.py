@@ -1,5 +1,4 @@
-import pygame
-from sys import exit
+from settings import *
 import random
 
 class Monstro:
@@ -46,7 +45,7 @@ spawn_points = [(20, 80), (20, 520), (780, 520), (780, 80)]
 
 # Timer para spawnar monstros
 monstro_timer_spawn = pygame.USEREVENT + 1
-pygame.time.set_timer(monstro_timer_spawn, 2000)  # spawn a cada 2 segundos
+pygame.time.set_timer(monstro_timer_spawn, 2000) # spawn a cada 2 segundos
 
 while True:
     for evento in pygame.event.get():
@@ -75,8 +74,8 @@ while True:
 
     # Atualizar e desenhar monstros
     for monstro in monstros:
-    monstro.seguir_jogador(retangulo_personagem_costas.center)
-    monstro.desenhar(tela)
+        monstro.seguir_jogador(retangulo_personagem_costas.center)
+        monstro.desenhar(tela)
 
     pygame.display.update()
     clock.tick(60)

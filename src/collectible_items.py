@@ -1,4 +1,4 @@
-from Settings import *
+from settings import *
 import random
 itens = [];
 
