@@ -27,6 +27,6 @@ class Obstacles:
             Obstacle(pygame.Rect((0, 173, 186, 80)), obstaculos_group),
             Obstacle(pygame.Rect((619, 169, 185, 80)), obstaculos_group),
             Obstacle(pygame.Rect((619, 374, 185, 81)), obstaculos_group),
-            Obstacle(pygame.Rect((464, 33, 88, 52)), obstaculos_group),
+            Obstacle(pygame.Rect((456, 33, 104, 20)), obstaculos_group),
             Obstacle(pygame.Rect((308, 4, 185, 4)), obstaculos_group)
         ]
