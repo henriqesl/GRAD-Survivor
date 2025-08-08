@@ -45,7 +45,7 @@ retangulo_jogador = imagem_jogador.get_rect(center=(400, 300))
 
 imagem_mapa = pygame.image.load('mapa1.0.png')
 
-imagem_monstro_original = pygame.image.load('imagens jogo 2/sprite_4_resized.png').convert_alpha()
+imagem_monstro_original = pygame.image.load('imagens jogo 2/monstro_sprite.png').convert_alpha()
 imagem_monstro = pygame.transform.scale(imagem_monstro_original, (40, 40))
 
 # Lista para guardar todos os monstros ativos
