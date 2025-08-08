@@ -3,6 +3,7 @@ from player import Player
 from mouse import Mouse
 from obstacles import Obstacles
 from monster_manager import MonsterManager, EVENTO_SPAWN_MONSTRO
+from collectible_items import drop_item, aplicar_poder
 
 class Game:
     def __init__(self):
@@ -12,18 +13,19 @@ class Game:
         self.map = pygame.image.load('assets/images/mapa1.0.png').convert()
 
         # --- GRUPOS ---
-        self.all_sprites = pygame.sprite.Group()       # Para DESENHAR tudo
-        self.collision_sprites = pygame.sprite.Group() # Para colisões de parede
-        self.monster_sprites = pygame.sprite.Group()   # Para LÓGICA dos monstros
-        self.mouse_sprites = pygame.sprite.Group()     # Para LÓGICA dos tiros
+        self.all_sprites = pygame.sprite.Group()       # Para desenhar tudo
+        self.collision_sprites = pygame.sprite.Group() # Paredes
+        self.monster_sprites = pygame.sprite.Group()   # Lógica dos monstros
+        self.mouse_sprites = pygame.sprite.Group()     # Lógica dos tiros
+        self.collectible_items = pygame.sprite.Group() # Itens coletáveis
+
+        Obstacles(self.collision_sprites)
 
         self.monster_manager = MonsterManager(self.all_sprites, self.monster_sprites)
         self.game_active = True
 
         self.shoot_delay = 300
         self.last_shot_time = 0
-        
-        Obstacles(self.collision_sprites)
 
         self.player_principal = Player(
             (WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2),
@@ -31,6 +33,12 @@ class Game:
             self.collision_sprites,
             self
         )
+
+        self.item_imagens = {
+            'cracha': pygame.image.load('assets/images/cracha.png').convert_alpha(),
+            'redbull': pygame.image.load('assets/images/redbull.png').convert_alpha(),
+            'subway': pygame.image.load('assets/images/subway.png').convert_alpha(),
+        }
 
     def run(self):
         while True:
@@ -44,44 +52,53 @@ class Game:
                 if self.game_active:
                     if event.type == EVENTO_SPAWN_MONSTRO:
                         self.monster_manager.spawn_monster()
-                else:
-                    pass
 
             if self.game_active:
-
                 self.player_principal.update(dt)
                 self.monster_sprites.update(dt, self.player_principal)
                 self.mouse_sprites.update(dt)
                 self.monster_manager.update()
 
                 self.check_shooting()
-                self.player_principal.update(dt)
 
-                # --- COLISÕES ---
+                # --- COLISÕES DE TIRO COM MONSTRO ---
+                colisoes = pygame.sprite.groupcollide(self.mouse_sprites, self.monster_sprites, True, False)
+                for projeteis, monstros in colisoes.items():
+                    for monstro in monstros:
+                        monstro.vida -= 1
+                        if monstro.vida <= 0:
+                            monstro.kill()
+                            drop_item(monstro.rect.center, self.item_imagens, [self.all_sprites, self.collectible_items])
+
+                # --- COLISÕES DE MONSTRO COM JOGADOR ---
                 if pygame.sprite.spritecollide(self.player_principal, self.monster_sprites, False):
                     self.game_active = False
 
-                pygame.sprite.groupcollide(self.mouse_sprites, self.monster_sprites, True, True)
+                # --- COLETA DE ITENS ---
+                coletados = pygame.sprite.spritecollide(self.player_principal, self.collectible_items, False)
+                for item in coletados:
+                    if not item.used:
+                        aplicar_poder(self.player_principal, item.funcao)
+                        item.used = True
+                        item.kill()
 
                 # --- DESENHO ---
                 self.screen.blit(self.map, (0, 0))
                 self.all_sprites.draw(self.screen)
             else:
-                # Lógica da tela de Game Over
+                # Tela de Game Over (não implementada ainda)
                 pass
-            
+
             pygame.display.flip()
 
     def check_shooting(self):
-        """Verifica se o jogador está atirando e se o delay já passou."""
         mouse_buttons = pygame.mouse.get_pressed()
-        
+
         if mouse_buttons[0]:
             current_time = pygame.time.get_ticks()
-            
+
             if current_time - self.last_shot_time > self.shoot_delay:
                 self.last_shot_time = current_time
-                # Efetua o disparo
                 self.shoot_mouse()
 
     def shoot_mouse(self):

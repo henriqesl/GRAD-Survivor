@@ -11,17 +11,20 @@ class ItemColetavel(pygame.sprite.Sprite):
         self.used = False
 
 
-def drop_item(pos, imagens, grupo_itens):
+def drop_item(pos, imagens, grupos):
     numero = random.randint(1, 100)
-    if 0 < numero <= 25:
+
+    if 0 < numero <= 5:
         item = ItemColetavel(pos, 'cracha', imagens['cracha'])
-    elif 25 < numero <= 50:
+    elif 5 < numero <= 10:
         item = ItemColetavel(pos, 'redbull', imagens['redbull'])
-    elif 50 < numero <= 75:
+    elif 10 < numero <= 15:
         item = ItemColetavel(pos, 'subway', imagens['subway'])
     else:
-        return  
-    grupo_itens.add(item)
+        return
+
+    for grupo in grupos:
+        grupo.add(item)
 
 def aplicar_poder(player, tipo):
     agora = pygame.time.get_ticks()
