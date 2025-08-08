@@ -17,12 +17,43 @@ class Player(pygame.sprite.Sprite):
         self.base_speed = 220
         self.collision_sprites = collision_sprites
 
+        # --- LÓGICA DE VIDAS E INVENCIBILIDADE ---
+        self.max_lives = 3
+        self.lives = self.max_lives
+        self.invincible = False
+        self.invincibility_duration = 1500
+        self.last_hit_time = 0
+
         # Poderes e timers
         self.power_timers = {
             'speed': 0,
             'intangivel': 0
         }
         self.intangivel = False
+
+    def take_damage(self):
+        """
+        Este método é chamado quando o jogador colide com um monstro.
+        """
+        current_time = pygame.time.get_ticks()
+        if not self.invincible:
+            self.lives -= 1
+            self.invincible = True
+            self.last_hit_time = current_time
+    
+    def check_invincibility(self):
+        """Verifica se o tempo de invencibilidade já passou."""
+        if self.invincible:
+            current_time = pygame.time.get_ticks()
+            if current_time - self.last_hit_time > self.invincibility_duration:
+                self.invincible = False
+
+    def reset(self):
+        """Reseta o jogador para um novo jogo."""
+        self.lives = self.max_lives
+        self.rect.center = (WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2)
+        self.direction = pygame.Vector2()
+        self.invincible = False
 
     def load_images(self):
         self.frames = {
@@ -115,3 +146,11 @@ class Player(pygame.sprite.Sprite):
         self.move(dt)
         self.handle_power_timers()
         self.animate(dt)
+        self.check_invincibility()
+
+        if self.invincible:
+            # Faz a imagem piscar
+            alpha = 128 if pygame.time.get_ticks() % 200 < 100 else 255
+            self.image.set_alpha(alpha)
+        else:
+            self.image.set_alpha(255) # Garante que a imagem volte ao normal
