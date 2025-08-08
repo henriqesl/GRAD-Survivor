@@ -15,7 +15,7 @@ class Monstro(pygame.sprite.Sprite):
             self.vida = 2
 
         imagem_original = pygame.image.load(caminho_imagem).convert_alpha()
-        self.image = pygame.transform.scale(imagem_original, (40, 40))
+        self.image = pygame.transform.scale(imagem_original, (60, 60))
         self.rect = self.image.get_rect(center=posicao_inicial)
         self.velocidade = velocidade
     

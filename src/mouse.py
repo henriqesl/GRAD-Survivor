@@ -12,7 +12,7 @@ def load_mouse_image():
 # --- CLASSE QUE REPRESENTA O PROJÉTIL (MOUSE) ---
 
 class Mouse(pygame.sprite.Sprite):
-    def __init__(self, pos, direction, groups, speed=550):
+    def __init__(self, pos, direction, groups, speed=400):
         """
         inicializa a classe Mouse.
         - pos: A posição inicial (x, y) de onde o mouse é criado

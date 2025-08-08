@@ -19,13 +19,15 @@ class Game:
 
         self.monster_manager = MonsterManager(self.all_sprites, self.monster_sprites)
         self.game_active = True
+
+        self.shoot_delay = 300
+        self.last_shot_time = 0
         
         Obstacles(self.collision_sprites)
 
-        # Criamos o jogador e o adicionamos ao grupo de desenho
         self.player_principal = Player(
             (WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2),
-            [self.all_sprites], # Adiciona a all_sprites para ser desenhado
+            [self.all_sprites],
             self.collision_sprites,
             self
         )
@@ -40,29 +42,20 @@ class Game:
                     exit()
 
                 if self.game_active:
-                    if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
-                        self.shoot_mouse()
                     if event.type == EVENTO_SPAWN_MONSTRO:
                         self.monster_manager.spawn_monster()
                 else:
-                    # Lógica para reiniciar
                     pass
 
             if self.game_active:
-                # --- ATUALIZAÇÕES SEPARADAS ---
-                # Aqui está a solução! Cada grupo é atualizado com seus próprios argumentos.
 
-                # 1. O Player é atualizado sozinho, com os argumentos que ele espera.
                 self.player_principal.update(dt)
-
-                # 2. Os Monstros são atualizados, recebendo o jogador.
                 self.monster_sprites.update(dt, self.player_principal)
-
-                # 3. Os Mouses (tiros) são atualizados.
                 self.mouse_sprites.update(dt)
-                
-                # O manager de waves também é atualizado
                 self.monster_manager.update()
+
+                self.check_shooting()
+                self.player_principal.update(dt)
 
                 # --- COLISÕES ---
                 if pygame.sprite.spritecollide(self.player_principal, self.monster_sprites, False):
@@ -71,8 +64,6 @@ class Game:
                 pygame.sprite.groupcollide(self.mouse_sprites, self.monster_sprites, True, True)
 
                 # --- DESENHO ---
-                # O all_sprites continua desenhando tudo de uma vez, pois todos os
-                # sprites foram adicionados a ele no momento da criação.
                 self.screen.blit(self.map, (0, 0))
                 self.all_sprites.draw(self.screen)
             else:
@@ -80,6 +71,18 @@ class Game:
                 pass
             
             pygame.display.flip()
+
+    def check_shooting(self):
+        """Verifica se o jogador está atirando e se o delay já passou."""
+        mouse_buttons = pygame.mouse.get_pressed()
+        
+        if mouse_buttons[0]:
+            current_time = pygame.time.get_ticks()
+            
+            if current_time - self.last_shot_time > self.shoot_delay:
+                self.last_shot_time = current_time
+                # Efetua o disparo
+                self.shoot_mouse()
 
     def shoot_mouse(self):
         mouse_pos = pygame.mouse.get_pos()
@@ -93,7 +96,7 @@ class Game:
             direction=direction, 
             groups=[self.all_sprites, self.mouse_sprites]
         )
-        
+
 if __name__ == '__main__':
     jogo = Game()
     jogo.run()

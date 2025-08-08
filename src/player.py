@@ -13,8 +13,8 @@ class Player(pygame.sprite.Sprite):
     
         # Movimento
         self.direction = pygame.Vector2()
-        self.speed = 300
-        self.base_speed = 300
+        self.speed = 220
+        self.base_speed = 220
         self.collision_sprites = collision_sprites
 
         # Poderes e timers
