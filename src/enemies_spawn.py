@@ -3,7 +3,7 @@ import random
 
 class Monstro:
     def __init__(self, posicao_inicial, velocidade):
-        imagem_monstro_original = pygame.image.load('sprite_1_resized.png').convert_alpha()
+        imagem_monstro_original = pygame.image.load('assets/images/monstro_sprite.png').convert_alpha()
         self.imagem_monstro = pygame.transform.scale(imagem_monstro_original, (40, 40))
         self.vida = 1
         self.retangulo = self.imagem_monstro.get_rect(center=posicao_inicial)
@@ -44,7 +44,7 @@ largura_tela, altura_tela = 800, 600
 tela = pygame.display.set_mode((largura_tela, altura_tela))
 clock = pygame.time.Clock()
 
-imagem_jogador_original = pygame.image.load('sprite_1_resized.png').convert_alpha()
+imagem_jogador_original = pygame.image.load('assets/imagens/sprite_1_resized.png').convert_alpha()
 imagem_jogador = pygame.transform.scale(imagem_jogador_original, (50, 50))
 retangulo_jogador = imagem_jogador.get_rect(center=(400, 300))
 
