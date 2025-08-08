@@ -8,14 +8,15 @@ Este repositório contém o código-fonte do jogo desenvolvido como projeto da d
 │   ├── images/              # Imagens usadas no jogo
 │   └── sounds/              # Efeitos sonoros ou músicas
 ├── src/                     # Código auxiliar do jogo
-│   ├── player.py            # Lógica do jogador
-│   ├── bullet.py            # Lógica das balas
 │   ├── collectible_items.py # Lógica dos coletáveis
-│   ├── enemies_spawn.py     # Lógica do Spawn
-│   ├── enemy.py             # Lógica dos Inimigos
-│   ├── movimentacao_mapa.py # Lógica da movimentação do player pelo mapa
-│   ├── mouse.py
-│   ├── settings.py
+│   ├── enemies.py           # Lógica do inimigo (dano, vida, colisão)
+│   ├── game.py              # Class do jogo que importar todas as classe presentes.
+│   ├── monster_manager.py   # Lógica para linkar enemies e game.
+│   ├── bullet.py            # Lógica do mouse (atirar / colisão)
+│   ├── obstacles.py         # Obstáculos para movimentação jogador/inimigo
+│   ├── player.py            # Lógica do jogador (movimento / vida)
+│   ├── collectible_items.py # Lógica dos coletáveis
+│   ├── settings.py          # Configurações padrão do jogo
 ├── main.py                  # Arquivo principal do jogo
 ├── .gitignore               # Arquivos e pastas ignorados pelo Git
 └── README.md                # Esta documentação
