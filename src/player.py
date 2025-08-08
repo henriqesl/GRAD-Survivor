@@ -1,3 +1,4 @@
+import pygame
 from settings import *
 
 class Player(pygame.sprite.Sprite):
@@ -8,9 +9,9 @@ class Player(pygame.sprite.Sprite):
         self.state, self.frame_index = 'down', 0 
         self.image = self.frames[self.state][self.frame_index]
         self.rect = self.image.get_rect(center=pos)
-        self.hitbox_rect = self.rect.inflate(-60, 0)
+        self.hitbox_rect = self.rect.inflate(-30, 0)  # Ajuste da hitbox
     
-        # movimento 
+        # Movimento
         self.direction = pygame.Vector2()
         self.speed = 300
         self.base_speed = 300
@@ -35,7 +36,6 @@ class Player(pygame.sprite.Sprite):
             for i in range(len(frames_list)):
                 frames_list[i] = pygame.transform.scale(frames_list[i], (40, 40))
 
-        # Cópia original para restaurar depois
         self.frames_original = {
             state: [frame.copy() for frame in frames]
             for state, frames in self.frames.items()
@@ -49,31 +49,35 @@ class Player(pygame.sprite.Sprite):
 
     def move(self, dt):
         self.hitbox_rect.x += self.direction.x * self.speed * dt
-        self.collision('horizontal', self.collision_sprites)  
+        self.collision('horizontal', self.collision_sprites)  # Corrigido para passar o grupo de obstáculos
         self.hitbox_rect.y += self.direction.y * self.speed * dt
-        self.collision('vertical', self.collision_sprites)    
+        self.collision('vertical', self.collision_sprites)  # Corrigido para passar o grupo de obstáculos
         self.rect.center = self.hitbox_rect.center
 
-    def collision(self, direction, obstaculos):
-        for obstaculo in obstaculos:
-            if self.hitbox_rect.colliderect(obstaculo):
+    def collision(self, direction, obstacles):
+        for obstaculo in obstacles:
+            if self.hitbox_rect.colliderect(obstaculo.rect):  # Use obstaculo.rect
                 if direction == 'horizontal':
-                    if self.direction.x > 0: self.hitbox_rect.right = obstaculo.left
-                    if self.direction.x < 0: self.hitbox_rect.left = obstaculo.right
+                    if self.direction.x > 0:
+                        self.hitbox_rect.right = obstaculo.rect.left  # Use obstaculo.rect.left
+                    if self.direction.x < 0:
+                        self.hitbox_rect.left = obstaculo.rect.right  # Use obstaculo.rect.right
                 if direction == 'vertical':
-                    if self.direction.y > 0: self.hitbox_rect.bottom = obstaculo.top
-                    if self.direction.y < 0: self.hitbox_rect.top = obstaculo.bottom
+                    if self.direction.y > 0:
+                        self.hitbox_rect.bottom = obstaculo.rect.top  # Use obstaculo.rect.top
+                    if self.direction.y < 0:
+                        self.hitbox_rect.top = obstaculo.rect.bottom  # Use obstaculo.rect.bottom
 
-            self.rect.topleft - self.hitbox_rect.topleft
+        self.rect.topleft = self.hitbox_rect.topleft
 
     def animate(self, dt):
-        # Definir estado (direção)
+        # Define o estado (direção)
         if self.direction.x != 0:
             self.state = 'right' if self.direction.x > 0 else 'left'
         if self.direction.y != 0:
             self.state = 'down' if self.direction.y > 0 else 'up'
 
-        # Avança frames se estiver se movendo
+        # Avança os frames se o jogador estiver se movendo
         self.frame_index += 5 * dt if self.direction.length() > 0 else 0
         frames_list = self.frames[self.state]
         self.image = frames_list[int(self.frame_index) % len(frames_list)]
@@ -104,7 +108,6 @@ class Player(pygame.sprite.Sprite):
         else:
             if self.intangivel:
                 self.intangivel = False
-                # Restaurar frames originais
                 self.frames = {state: [frame.copy() for frame in frames] for state, frames in self.frames_original.items()}
 
     def update(self, dt):
