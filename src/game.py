@@ -13,12 +13,13 @@ class Game:
         self.all_sprites = pygame.sprite.Group()
         self.colision_sprites = pygame.sprite.Group()
 
-        Obstacles(self.collision_sprites)
+        Obstacles(self.colision_sprites)
 
         self.player_principal = Player(
             (WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2),
             self.all_sprites,
-            self.collision_sprites
+            self.colision_sprites,
+            self
         )
 
     def run(self):

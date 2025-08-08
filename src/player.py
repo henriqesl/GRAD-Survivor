@@ -1,8 +1,9 @@
 from settings import *
 
 class Player(pygame.sprite.Sprite):
-    def __init__(self, pos, groups, collision_sprites):
+    def __init__(self, pos, groups, collision_sprites, game_backup):
         super().__init__(groups)
+        self.game = game_backup
         self.load_images()
         self.state, self.frame_index = 'down', 0 
         self.image = self.frames[self.state][self.frame_index]
@@ -11,8 +12,8 @@ class Player(pygame.sprite.Sprite):
     
         # movimento 
         self.direction = pygame.Vector2()
-        self.speed = 500
-        self.base_speed = 500
+        self.speed = 300
+        self.base_speed = 300
         self.collision_sprites = collision_sprites
 
         # Poderes e timers
@@ -23,20 +24,22 @@ class Player(pygame.sprite.Sprite):
         self.intangivel = False
 
     def load_images(self):
-        self.frames = {'left': "sprite_2_resized.png", 'right': "sprite_3_resized.png", 'up': "sprite_4_resized.png", 'down': "sprite_3_resized.png"}
+        self.frames = {
+            'left':  [pygame.image.load('assets/images/sprite_2_resized.png').convert_alpha()],
+            'right': [pygame.image.load('assets/images/sprite_3_resized.png').convert_alpha()],
+            'up':    [pygame.image.load('assets/images/sprite_4_resized.png').convert_alpha()],
+            'down':  [pygame.image.load('assets/images/sprite_1_resized.png').convert_alpha()]
+        }
 
-        """
-        for state in self.frames.keys():
-            for folder_path, file_names in walk(join('images', 'player', state)):
-                if file_names:
-                    for file_name in sorted(file_names, key=lambda name: int(name.split('.')[0])):
-                        full_path = join(folder_path, file_name)
-                        surf = pygame.image.load(full_path).convert_alpha()
-                        self.frames[state].append(surf)
-        """
+        for key, frames_list in self.frames.items():
+            for i in range(len(frames_list)):
+                frames_list[i] = pygame.transform.scale(frames_list[i], (40, 40))
 
-        # Guardar cópia original para restaurar depois
-        self.frames_original = {state: [frame.copy() for frame in frames] for state, frames in self.frames.items()}
+        # Cópia original para restaurar depois
+        self.frames_original = {
+            state: [frame.copy() for frame in frames]
+            for state, frames in self.frames.items()
+        }
 
     def input(self):
         keys = pygame.key.get_pressed()
@@ -51,15 +54,17 @@ class Player(pygame.sprite.Sprite):
         self.collision('vertical')
         self.rect.center = self.hitbox_rect.center
 
-    def collision(self, direction):
-        for sprite in self.collision_sprites:
-            if sprite.rect.colliderect(self.hitbox_rect):
+    def collision(self, direction, obstacles):
+        for obstaculo in obstacles:
+            if self.hitbox_rect.colliderect(obstaculo):
                 if direction == 'horizontal':
-                    if self.direction.x > 0: self.hitbox_rect.right = sprite.rect.left
-                    if self.direction.x < 0: self.hitbox_rect.left = sprite.rect.right
+                    if self.direction.x > 0: self.hitbox_rect.right = obstaculo.left
+                    if self.direction.x < 0: self.hitbox_rect.left = obstaculo.right
                 if direction == 'vertical':
-                    if self.direction.y > 0: self.hitbox_rect.bottom = sprite.rect.top
-                    if self.direction.y < 0: self.hitbox_rect.top = sprite.rect.bottom
+                    if self.direction.y > 0: self.hitbox_rect.bottom = obstaculo.top
+                    if self.direction.y < 0: self.hitbox_rect.top = obstaculo.bottom
+
+            self.rect.topleft - self.hitbox_rect.topleft
 
     def animate(self, dt):
         # Definir estado (direção)

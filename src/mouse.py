@@ -5,26 +5,27 @@ def load_mouse_image():
     carrega a imagem do projétil, ajusta as redimensões
     """
     script_dir = os.path.dirname(__file__)
-    assets_path = os.path.join(script_dir, '..', 'assets')
+    assets_path = os.path.join(script_dir, 'assets', 'images')
     mouse_img_original = pygame.image.load(os.path.join(assets_path, 'mouse.png')).convert_alpha()
       # redimensiona para 15x8 e a retorna
-    return pygame.transform.scale(mouse_img_original, (15, 8))
+    return pygame.transform.scale(mouse_img_original, (20, 10))
 
 # --- CLASSE QUE REPRESENTA O PROJÉTIL (MOUSE) ---
 
-class Mouse:
-    def __init__(self, pos, direction, speed=550, radius=8):
+class Mouse(pygame.sprite.Sprite):
+    def __init__(self, pos, direction, groups, speed=550):
         """
         inicializa a classe Mouse.
         - pos: A posição inicial (x, y) de onde o mouse é criado
         - direction: Um vetor do pygame para indicar a direção do movimento
+        - groups: Os grupos de sprites aos quais este projétil pertencerá
         - speed: A velocidade de movimento do mouse em p/s
-        - radius: O raio para detecção de colisão
         """
-        # (pos) é parametro de construção inicial
+        
+        super().__init__(groups)
+
         self.pos = pygame.Vector2(pos)
         self.vel = direction * speed
-        self.radius = radius
         self.image = load_mouse_image()
         self.rect = self.image.get_rect(center=self.pos)
 
@@ -36,13 +37,9 @@ class Mouse:
         self.pos += self.vel * dt
         self.rect.center = self.pos
 
-    def draw(self, screen):
-         """
-        Método para desenhar a imagem do mouse na tela.
-        - screen: A superfície da tela principal do Pygame
-        """
-        # blit = desenhar uma tela sob a outra
-        screen.blit(self.image, self.rect)
+        screen_rect = pygame.display.get_surface().get_rect()
+        if not screen_rect.contains(self.rect):
+            self.kill() # Remove o sprite de todos os grupos
 
     def check_collision(self, enemy_pos, enemy_radius):
         """
