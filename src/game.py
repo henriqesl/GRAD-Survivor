@@ -1,3 +1,5 @@
+# game.py
+
 from settings import *
 from player import Player
 from mouse import Mouse
@@ -7,25 +9,26 @@ from collectible_items import drop_item, aplicar_poder
 
 class Game:
     def __init__(self):
+        pygame.init() 
         pygame.display.set_caption("GRAD-Survivor")
         self.screen = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
         self.clock = pygame.time.Clock()
         self.map = pygame.image.load('assets/images/mapa1.0.png').convert()
 
         # --- GRUPOS ---
-        self.all_sprites = pygame.sprite.Group()       # Para desenhar tudo
-        self.collision_sprites = pygame.sprite.Group() # Paredes
-        self.monster_sprites = pygame.sprite.Group()   # Lógica dos monstros
-        self.mouse_sprites = pygame.sprite.Group()     # Lógica dos tiros
-        self.collectible_items = pygame.sprite.Group() # Itens coletáveis
-
-        Obstacles(self.collision_sprites)
+        self.all_sprites = pygame.sprite.Group()
+        self.collision_sprites = pygame.sprite.Group()
+        self.monster_sprites = pygame.sprite.Group()
+        self.mouse_sprites = pygame.sprite.Group()
+        self.collectible_items = pygame.sprite.Group()
 
         self.monster_manager = MonsterManager(self.all_sprites, self.monster_sprites)
         self.game_active = True
 
         self.shoot_delay = 300
         self.last_shot_time = 0
+        
+        Obstacles(self.collision_sprites)
 
         self.player_principal = Player(
             (WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2),
@@ -40,10 +43,21 @@ class Game:
             'subway': pygame.image.load('assets/images/subway.png').convert_alpha(),
         }
 
+    def reset_game(self):
+        """Reinicia o estado do jogo para uma nova partida."""
+        self.game_active = True
+        self.player_principal.reset()
+        self.monster_manager.reset()
+        self.mouse_sprites.empty()
+        self.collectible_items.empty() # Limpa os itens que sobraram
+        self.all_sprites.empty()
+        self.all_sprites.add(self.player_principal)
+
     def run(self):
         while True:
             dt = self.clock.tick(60) / 1000
 
+            # --- EVENTOS ---
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
@@ -52,51 +66,64 @@ class Game:
                 if self.game_active:
                     if event.type == EVENTO_SPAWN_MONSTRO:
                         self.monster_manager.spawn_monster()
+                else: 
+                    if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
+                        self.reset_game()
 
+            # --- LÓGICA PRINCIPAL DO JOGO ---
             if self.game_active:
+                # --- ATUALIZAÇÕES ---
                 self.player_principal.update(dt)
                 self.monster_sprites.update(dt, self.player_principal)
                 self.mouse_sprites.update(dt)
                 self.monster_manager.update()
-
                 self.check_shooting()
+                self.collectible_items.update() # Atualiza os itens (se tiverem animação)
 
-                # --- COLISÕES DE TIRO COM MONSTRO ---
-                colisoes = pygame.sprite.groupcollide(self.mouse_sprites, self.monster_sprites, True, False)
-                for projeteis, monstros in colisoes.items():
+                # --- COLISÕES ---
+                colisoes_tiro_monstro = pygame.sprite.groupcollide(self.mouse_sprites, self.monster_sprites, True, False)
+                for projeteis, monstros in colisoes_tiro_monstro.items():
                     for monstro in monstros:
                         monstro.vida -= 1
                         if monstro.vida <= 0:
-                            monstro.kill()
                             drop_item(monstro.rect.center, self.item_imagens, [self.all_sprites, self.collectible_items])
+                            monstro.kill()
+                
+                monsters_hit = pygame.sprite.spritecollide(self.player_principal, self.monster_sprites, False)
+                if monsters_hit:
+                    self.player_principal.take_damage()
+                
+                if self.player_principal.lives <= 0:
+                    self.game_active = False # Fim de jogo
 
-                # --- COLISÕES DE MONSTRO COM JOGADOR ---
-                if pygame.sprite.spritecollide(self.player_principal, self.monster_sprites, False):
-                    self.game_active = False
-
-                # --- COLETA DE ITENS ---
-                coletados = pygame.sprite.spritecollide(self.player_principal, self.collectible_items, False)
+                coletados = pygame.sprite.spritecollide(self.player_principal, self.collectible_items, True)
                 for item in coletados:
-                    if not item.used:
-                        aplicar_poder(self.player_principal, item.funcao)
-                        item.used = True
-                        item.kill()
+                    aplicar_poder(self.player_principal, item.funcao)
 
                 # --- DESENHO ---
                 self.screen.blit(self.map, (0, 0))
                 self.all_sprites.draw(self.screen)
+                self.draw_ui()
+            
             else:
-                # Tela de Game Over (não implementada ainda)
-                pass
-
+                self.screen.fill((0, 0, 0))
+                font = pygame.font.Font(None, 48)
+                texto = font.render("Game Over! Pressione ESPAÇO para reiniciar.", True, (255, 255, 255))
+                rect_texto = texto.get_rect(center=(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2))
+                self.screen.blit(texto, rect_texto)
+            
             pygame.display.flip()
+
+    def draw_ui(self):
+        font = pygame.font.Font(None, 36)
+        lives_text = font.render(f'Vidas: {self.player_principal.lives}', True, (255, 255, 255))
+        text_rect = lives_text.get_rect(topleft=(20, 20))
+        self.screen.blit(lives_text, text_rect)
 
     def check_shooting(self):
         mouse_buttons = pygame.mouse.get_pressed()
-
         if mouse_buttons[0]:
             current_time = pygame.time.get_ticks()
-
             if current_time - self.last_shot_time > self.shoot_delay:
                 self.last_shot_time = current_time
                 self.shoot_mouse()
@@ -107,12 +134,7 @@ class Game:
         direction = pygame.Vector2(mouse_pos) - pygame.Vector2(player_pos)
         if direction.length() > 0:
             direction.normalize_ip()
-
-        Mouse(
-            pos=player_pos, 
-            direction=direction, 
-            groups=[self.all_sprites, self.mouse_sprites]
-        )
+        Mouse(pos=player_pos, direction=direction, groups=[self.all_sprites, self.mouse_sprites])
 
 if __name__ == '__main__':
     jogo = Game()
