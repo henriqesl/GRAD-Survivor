@@ -9,9 +9,8 @@ class Player(pygame.sprite.Sprite):
         self.state, self.frame_index = 'down', 0 
         self.image = self.frames[self.state][self.frame_index]
         self.rect = self.image.get_rect(center=pos)
-        self.hitbox_rect = self.rect.inflate(-30, 0)  # Ajuste da hitbox
+        self.hitbox_rect = self.rect.inflate(-30, 0) 
     
-        # Movimento
         self.direction = pygame.Vector2()
         self.speed = 220
         self.base_speed = 220
@@ -24,7 +23,7 @@ class Player(pygame.sprite.Sprite):
         self.invincibility_duration = 1500
         self.last_hit_time = 0
 
-        # Poderes e timers
+        # --- PODERES E TIMERS ---
         self.power_timers = {
             'speed': 0,
             'intangivel': 0
@@ -32,11 +31,9 @@ class Player(pygame.sprite.Sprite):
         self.intangivel = False
 
     def take_damage(self):
-        """
-        Este método é chamado quando o jogador colide com um monstro.
-        """
+        # --- Função de Levar Dano ---
         current_time = pygame.time.get_ticks()
-        if not self.invincible:
+        if not self.invincible and not self.intangivel:
             self.lives -= 1
             self.invincible = True
             self.last_hit_time = current_time
@@ -49,13 +46,14 @@ class Player(pygame.sprite.Sprite):
                 self.invincible = False
 
     def reset(self):
-        """Reseta o jogador para um novo jogo."""
+        # --- Reiniciar partida ---
         self.lives = self.max_lives
         self.rect.center = (WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2)
         self.direction = pygame.Vector2()
         self.invincible = False
 
     def load_images(self):
+        # --- Carregar Sprites ---
         self.frames = {
             'left':  [pygame.image.load('assets/images/sprite_2_resized.png').convert_alpha()],
             'right': [pygame.image.load('assets/images/sprite_3_resized.png').convert_alpha()],
@@ -80,35 +78,34 @@ class Player(pygame.sprite.Sprite):
 
     def move(self, dt):
         self.hitbox_rect.x += self.direction.x * self.speed * dt
-        self.collision('horizontal', self.collision_sprites)  # Corrigido para passar o grupo de obstáculos
+        self.collision('horizontal', self.collision_sprites)  
         self.hitbox_rect.y += self.direction.y * self.speed * dt
-        self.collision('vertical', self.collision_sprites)  # Corrigido para passar o grupo de obstáculos
+        self.collision('vertical', self.collision_sprites)  
         self.rect.center = self.hitbox_rect.center
 
     def collision(self, direction, obstacles):
         for obstaculo in obstacles:
-            if self.hitbox_rect.colliderect(obstaculo.rect):  # Use obstaculo.rect
+            if self.hitbox_rect.colliderect(obstaculo.rect):  
                 if direction == 'horizontal':
                     if self.direction.x > 0:
-                        self.hitbox_rect.right = obstaculo.rect.left  # Use obstaculo.rect.left
+                        self.hitbox_rect.right = obstaculo.rect.left 
                     if self.direction.x < 0:
-                        self.hitbox_rect.left = obstaculo.rect.right  # Use obstaculo.rect.right
+                        self.hitbox_rect.left = obstaculo.rect.right  
                 if direction == 'vertical':
                     if self.direction.y > 0:
-                        self.hitbox_rect.bottom = obstaculo.rect.top  # Use obstaculo.rect.top
+                        self.hitbox_rect.bottom = obstaculo.rect.top 
                     if self.direction.y < 0:
-                        self.hitbox_rect.top = obstaculo.rect.bottom  # Use obstaculo.rect.bottom
+                        self.hitbox_rect.top = obstaculo.rect.bottom
 
         self.rect.topleft = self.hitbox_rect.topleft
 
     def animate(self, dt):
-        # Define o estado (direção)
+        # --- Define o estado (direção) ---
         if self.direction.x != 0:
             self.state = 'right' if self.direction.x > 0 else 'left'
         if self.direction.y != 0:
             self.state = 'down' if self.direction.y > 0 else 'up'
 
-        # Avança os frames se o jogador estiver se movendo
         self.frame_index += 5 * dt if self.direction.length() > 0 else 0
         frames_list = self.frames[self.state]
         self.image = frames_list[int(self.frame_index) % len(frames_list)]
@@ -125,13 +122,13 @@ class Player(pygame.sprite.Sprite):
     def handle_power_timers(self):
         now = pygame.time.get_ticks()
 
-        # Velocidade
+        # --- Velocidade ---
         if self.power_timers['speed'] > now:
             self.speed = self.base_speed * 2
         else:
             self.speed = self.base_speed
 
-        # Intangibilidade
+        # --- Intangibilidade ---
         if self.power_timers['intangivel'] > now:
             if not self.intangivel: 
                 self.intangivel = True
@@ -152,5 +149,7 @@ class Player(pygame.sprite.Sprite):
             # Faz a imagem piscar
             alpha = 128 if pygame.time.get_ticks() % 200 < 100 else 255
             self.image.set_alpha(alpha)
+        elif self.intangivel:
+            pass
         else:
             self.image.set_alpha(255) # Garante que a imagem volte ao normal

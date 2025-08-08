@@ -14,11 +14,11 @@ class ItemColetavel(pygame.sprite.Sprite):
 def drop_item(pos, imagens, grupos):
     numero = random.randint(1, 100)
 
-    if 0 < numero <= 5:
+    if 10 < numero <= 15:
         item = ItemColetavel(pos, 'cracha', imagens['cracha'])
     elif 5 < numero <= 10:
         item = ItemColetavel(pos, 'redbull', imagens['redbull'])
-    elif 10 < numero <= 15:
+    elif 10 < numero <= 5:
         item = ItemColetavel(pos, 'subway', imagens['subway'])
     else:
         return
@@ -28,7 +28,7 @@ def drop_item(pos, imagens, grupos):
 
 def aplicar_poder(player, tipo):
     agora = pygame.time.get_ticks()
-    duracao = 3000  # 3 segundos em ms
+    duracao = 3000
 
     if tipo == 'redbull':
         player.power_timers['speed'] = agora + duracao
@@ -37,5 +37,12 @@ def aplicar_poder(player, tipo):
     elif tipo == 'cracha':
         player.power_timers['intangivel'] = agora + duracao
         print("Intangibilidade ativada por 3s!")
+    
+    elif tipo == 'subway':
+        if player.lives < player.max_lives:
+            player.lives += 1
+            print("Vida aumentada em +1!")
+        else:
+            print("Vida já está no máximo!")
 
             

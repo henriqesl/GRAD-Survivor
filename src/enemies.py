@@ -22,9 +22,6 @@ class Monstro(pygame.sprite.Sprite):
         self.posicao = pygame.Vector2(self.rect.center)
 
     def seguir_jogador(self, pos_jogador, dt):
-        """
-        Calcula a direção até o jogador e move o monstro suavemente.
-        """
         direcao = pygame.Vector2(pos_jogador) - self.posicao
         
         if direcao.length() > 0:  

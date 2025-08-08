@@ -2,9 +2,9 @@ from settings import *
 
 class Obstacle(pygame.sprite.Sprite):
     def __init__(self, rect, group):
-        super().__init__(group)  # Adiciona automaticamente ao grupo
+        super().__init__(group)
         self.image = pygame.Surface((rect.width, rect.height))
-        self.image.fill((255, 0, 0))  # Cor de preenchimento (vermelho) para visualização
+        self.image.fill((255, 0, 0))
         self.rect = rect
 
 class Obstacles:

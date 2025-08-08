@@ -44,12 +44,12 @@ class Game:
         }
 
     def reset_game(self):
-        """Reinicia o estado do jogo para uma nova partida."""
+        # --- REINICIA A PARTIDA ---
         self.game_active = True
         self.player_principal.reset()
         self.monster_manager.reset()
         self.mouse_sprites.empty()
-        self.collectible_items.empty() # Limpa os itens que sobraram
+        self.collectible_items.empty()
         self.all_sprites.empty()
         self.all_sprites.add(self.player_principal)
 
@@ -94,7 +94,7 @@ class Game:
                     self.player_principal.take_damage()
                 
                 if self.player_principal.lives <= 0:
-                    self.game_active = False # Fim de jogo
+                    self.game_active = False
 
                 coletados = pygame.sprite.spritecollide(self.player_principal, self.collectible_items, True)
                 for item in coletados:
