@@ -10,9 +10,9 @@ script_dir = os.path.dirname(__file__)
 assets_path = os.path.join(script_dir, '..', 'assets')
 
 # --- IMAGENS ---
-player_img = pygame.transform.scale(pygame.image.load(os.path.join(assets_path, 'jogador.png')).convert_alpha(), (60, 55))
-enemy_img = pygame.transform.scale(pygame.image.load(os.path.join(assets_path, 'inimigo_2.png')).convert_alpha(), (60, 55))
-background_img = pygame.transform.scale(pygame.image.load(os.path.join(assets_path, 'mapa.jpg')).convert(), (800, 600))
+player_img = pygame.transform.scale(pygame.image.load(os.path.join(assets_path, 'sprite_4_resized.png')).convert_alpha(), (60, 55))
+enemy_img = pygame.transform.scale(pygame.image.load(os.path.join(assets_path, 'monstro_sprite.png')).convert_alpha(), (60, 55))
+background_img = pygame.transform.scale(pygame.image.load(os.path.join(assets_path, 'mapa1.0.jpg')).convert(), (800, 600))
 
 # --- JOGADOR ---
 player_pos = pygame.Vector2(screen.get_width() / 2, screen.get_height() / 2)
