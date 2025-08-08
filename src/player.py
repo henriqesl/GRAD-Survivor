@@ -34,7 +34,7 @@ class Player(pygame.sprite.Sprite):
 
         for key, frames_list in self.frames.items():
             for i in range(len(frames_list)):
-                frames_list[i] = pygame.transform.scale(frames_list[i], (40, 40))
+                frames_list[i] = pygame.transform.scale(frames_list[i], (40, 50))
 
         self.frames_original = {
             state: [frame.copy() for frame in frames]
@@ -43,8 +43,8 @@ class Player(pygame.sprite.Sprite):
 
     def input(self):
         keys = pygame.key.get_pressed()
-        self.direction.x = int(keys[pygame.K_RIGHT]) - int(keys[pygame.K_LEFT])
-        self.direction.y = int(keys[pygame.K_DOWN]) - int(keys[pygame.K_UP])
+        self.direction.x = int(keys[pygame.K_RIGHT] or keys[pygame.K_d]) - int(keys[pygame.K_LEFT] or keys[pygame.K_a])
+        self.direction.y = int(keys[pygame.K_DOWN] or keys[pygame.K_s]) - int(keys[pygame.K_UP] or keys[pygame.K_w])
         self.direction = self.direction.normalize() if self.direction.length() > 0 else pygame.Vector2()
 
     def move(self, dt):

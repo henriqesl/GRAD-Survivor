@@ -7,7 +7,7 @@ def load_mouse_image():
     # mouse_img_original = pygame.image.load('assets/images/mouse.png').convert_alpha()
 
     # Adicione esta linha para carregar a imagem do jogador no lugar
-    mouse_img_original = pygame.image.load('assets/images/sprite_1_resized.png').convert_alpha()
+    mouse_img_original = pygame.image.load('assets/images/mouse.png').convert_alpha()
     
     # redimensiona para 20x10 e a retorna
     return pygame.transform.scale(mouse_img_original, (20, 10))
