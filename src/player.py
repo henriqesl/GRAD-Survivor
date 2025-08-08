@@ -49,13 +49,13 @@ class Player(pygame.sprite.Sprite):
 
     def move(self, dt):
         self.hitbox_rect.x += self.direction.x * self.speed * dt
-        self.collision('horizontal')
+        self.collision('horizontal', self.collision_sprites)  
         self.hitbox_rect.y += self.direction.y * self.speed * dt
-        self.collision('vertical')
+        self.collision('vertical', self.collision_sprites)    
         self.rect.center = self.hitbox_rect.center
 
-    def collision(self, direction, obstacles):
-        for obstaculo in obstacles:
+    def collision(self, direction, obstaculos):
+        for obstaculo in obstaculos:
             if self.hitbox_rect.colliderect(obstaculo):
                 if direction == 'horizontal':
                     if self.direction.x > 0: self.hitbox_rect.right = obstaculo.left
