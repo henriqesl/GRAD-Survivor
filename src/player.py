@@ -9,7 +9,7 @@ class Player(pygame.sprite.Sprite):
         self.rect = self.image.get_rect(center=pos)
         self.hitbox_rect = self.rect.inflate(-60, 0)
     
-        # movemento 
+        # movimento 
         self.direction = pygame.Vector2()
         self.speed = 500
         self.base_speed = 500
@@ -23,15 +23,17 @@ class Player(pygame.sprite.Sprite):
         self.intangivel = False
 
     def load_images(self):
-        self.frames = {'left': [], 'right': [], 'up': [], 'down': []}
+        self.frames = {'left': "sprite_2_resized.png", 'right': "sprite_3_resized.png", 'up': "sprite_4_resized.png", 'down': "sprite_3_resized.png"}
 
+        """
         for state in self.frames.keys():
-            for folder_path, sub_folders, file_names in walk(join('images', 'player', state)):
+            for folder_path, file_names in walk(join('images', 'player', state)):
                 if file_names:
                     for file_name in sorted(file_names, key=lambda name: int(name.split('.')[0])):
                         full_path = join(folder_path, file_name)
                         surf = pygame.image.load(full_path).convert_alpha()
                         self.frames[state].append(surf)
+        """
 
         # Guardar cópia original para restaurar depois
         self.frames_original = {state: [frame.copy() for frame in frames] for state, frames in self.frames.items()}
