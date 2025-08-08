@@ -4,13 +4,10 @@ def load_mouse_image():
     """
     carrega a imagem do projétil, ajusta as redimensões
     """
-    # mouse_img_original = pygame.image.load('assets/images/mouse.png').convert_alpha()
-
-    # Adicione esta linha para carregar a imagem do jogador no lugar
-    mouse_img_original = pygame.image.load('assets/images/mouse.png').convert_alpha()
-    
-    # redimensiona para 20x10 e a retorna
-    return pygame.transform.scale(mouse_img_original, (20, 10))
+    script_dir = os.path.dirname(__file__)
+    assets_path = os.path.join(script_dir, '..', 'assets', 'images')
+    mouse_img_original = pygame.image.load(os.path.join(assets_path, 'mouse.png')).convert_alpha()
+    return pygame.transform.scale(mouse_img_original, (25, 15))
 
 # --- CLASSE QUE REPRESENTA O PROJÉTIL (MOUSE) ---
 
@@ -26,22 +23,23 @@ class Mouse(pygame.sprite.Sprite):
         
         super().__init__(groups)
 
-        self.pos = pygame.Vector2(pos)
-        self.vel = direction * speed
         self.image = load_mouse_image()
-        self.rect = self.image.get_rect(center=self.pos)
+        self.rect = self.image.get_rect(center=pos)
 
-    def update(self, dt):
+        self.pos = pygame.Vector2(self.rect.center)
+        self.vel = direction * speed
+        
+
+    def update(self, dt, jogador=None):
         """
-        atualiza a posição do mouse a cada quadro, usando 
-        - DeltaTime (dt). 
+        Atualiza a posição do mouse. Ignora o jogador.
         """
         self.pos += self.vel * dt
-        self.rect.center = self.pos
+        self.rect.center = round(self.pos.x), round(self.pos.y)
 
         screen_rect = pygame.display.get_surface().get_rect()
         if not screen_rect.contains(self.rect):
-            self.kill() # Remove o sprite de todos os grupos
+            self.kill()
 
     def check_collision(self, enemy_pos, enemy_radius):
         """
