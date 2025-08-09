@@ -10,21 +10,49 @@ class MonsterManager:
         self.monster_sprites = monster_sprites_group
         
         self.pontos_de_spawn = [(20, 80), (20, 520), (780, 520), (780, 80)]
-        
+
+        self.monsters_per_wave = 10
+        self.max_waves = 10
+        self.game_won = False
         self.reset()
 
     def reset(self):
+        # --- Configura o início do jogo (Horda 1) ---
         self.wave = 1
         self.velocidade_monstro = 100  
         self.velocidade_robot = 130    
         self.spawn_interval = 2000     
+        self.monsters_spawned_this_wave = 0
+        self.game_won = False
         
         for monstro in self.monster_sprites:
             monstro.kill()
         
         pygame.time.set_timer(EVENTO_SPAWN_MONSTRO, self.spawn_interval)
+        print("Iniciando Horda 1")
+
+    def start_next_wave(self):
+        # --- Prepara a próxima horda ---
+        if self.wave >= self.max_waves:
+            print("Todas as hordas foram derrotadas! Você venceu!")
+            self.game_won = True
+            pygame.time.set_timer(EVENTO_SPAWN_MONSTRO, 0)
+            return
+
+        self.wave += 1
+        self.velocidade_monstro += 20
+        self.velocidade_robot += 20
+        self.monsters_spawned_this_wave = 0
+        
+        self.spawn_interval = max(500, self.spawn_interval - 200) 
+        pygame.time.set_timer(EVENTO_SPAWN_MONSTRO, self.spawn_interval)
+        print(f"Iniciando Horda {self.wave}")
 
     def spawn_monster(self):
+        # --- Lógica para criar um monstro --
+        if self.monsters_spawned_this_wave >= self.monsters_per_wave:
+            pygame.time.set_timer(EVENTO_SPAWN_MONSTRO, 0)
+            return
         ponto_spawn = random.choice(self.pontos_de_spawn)
         
         if self.wave >= 3 and random.random() < 0.3:
@@ -39,12 +67,11 @@ class MonsterManager:
         
         self.all_sprites.add(monstro)
         self.monster_sprites.add(monstro)
+        self.monsters_spawned_this_wave += 1
 
     def update(self):
-        if len(self.monster_sprites) >= 10 * self.wave:
-            self.wave += 1
-            self.velocidade_monstro += 20
-            self.velocidade_robot += 20
-            
-            self.spawn_interval = max(500, self.spawn_interval - 200) 
-            pygame.time.set_timer(EVENTO_SPAWN_MONSTRO, self.spawn_interval)
+        if self.game_won:
+            return
+
+        if self.monsters_spawned_this_wave >= self.monsters_per_wave and not self.monster_sprites:
+            self.start_next_wave()

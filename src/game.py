@@ -22,6 +22,7 @@ class Game:
 
         self.monster_manager = MonsterManager(self.all_sprites, self.monster_sprites)
         self.game_active = True
+        self.win_condition = False
 
         self.shoot_delay = 300
         self.last_shot_time = 0
@@ -44,6 +45,7 @@ class Game:
     def reset_game(self):
         # --- REINICIA A PARTIDA ---
         self.game_active = True
+        self.win_condition = False
         self.player_principal.reset()
         self.monster_manager.reset()
         self.mouse_sprites.empty()
@@ -75,8 +77,13 @@ class Game:
                 self.monster_sprites.update(dt, self.player_principal)
                 self.mouse_sprites.update(dt)
                 self.monster_manager.update()
+
+                if self.monster_manager.game_won:
+                    self.game_active = False
+                    self.win_condition = True
+
                 self.check_shooting()
-                self.collectible_items.update() # Atualiza os itens (se tiverem animação)
+                self.collectible_items.update()
 
                 # --- COLISÕES ---
                 colisoes_tiro_monstro = pygame.sprite.groupcollide(self.mouse_sprites, self.monster_sprites, True, False)
@@ -104,19 +111,34 @@ class Game:
                 self.draw_ui()
             
             else:
-                self.screen.fill((0, 0, 0))
-                font = pygame.font.Font(None, 48)
-                texto = font.render("Game Over! Pressione ESPAÇO para reiniciar.", True, (255, 255, 255))
-                rect_texto = texto.get_rect(center=(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2))
-                self.screen.blit(texto, rect_texto)
+                if self.win_condition:
+                    # Tela de Vitória
+                    self.screen.fill((20, 100, 20))
+                    font = pygame.font.Font(None, 48)
+                    texto = font.render("Você Venceu! Pressione ESPAÇO.", True, (255, 255, 255))
+                    rect_texto = texto.get_rect(center=(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2))
+                    self.screen.blit(texto, rect_texto)
+                else:
+                    # Tela de Game Over
+                    self.screen.fill((0, 0, 0))
+                    font = pygame.font.Font(None, 48)
+                    texto = font.render("Game Over! Pressione ESPAÇO para reiniciar.", True, (255, 255, 255))
+                    rect_texto = texto.get_rect(center=(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2))
+                    self.screen.blit(texto, rect_texto)
             
             pygame.display.flip()
 
     def draw_ui(self):
+        # --- Lógica para desenhar a interface do usuário (vidas e horda) ---
         font = pygame.font.Font(None, 36)
+        
         lives_text = font.render(f'Vidas: {self.player_principal.lives}', True, (255, 255, 255))
-        text_rect = lives_text.get_rect(topleft=(20, 20))
-        self.screen.blit(lives_text, text_rect)
+        lives_rect = lives_text.get_rect(topleft=(20, 20))
+        self.screen.blit(lives_text, lives_rect)
+
+        wave_text = font.render(f'Horda: {self.monster_manager.wave}', True, (255, 255, 255))
+        wave_rect = wave_text.get_rect(topright=(WINDOW_WIDTH - 20, 20))
+        self.screen.blit(wave_text, wave_rect)
 
     def check_shooting(self):
         mouse_buttons = pygame.mouse.get_pressed()

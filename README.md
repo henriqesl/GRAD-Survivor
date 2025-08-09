@@ -43,7 +43,6 @@ Este repositório contém o código-fonte do jogo desenvolvido como projeto da d
 | **Henrique Silva de Lima <hsl3>** | [henriqesl](https://github.com/henriqesl) | <img src="https://avatars.githubusercontent.com/u/163488602?v=4" width="80px"> |
 | **Guilherme de Siqueira Montenegro <gsma>** | [guimontenegro07](https://github.com/guimontenegro07) | <img src="https://avatars.githubusercontent.com/u/212376548?v=4" width="80px"> |
 | **Severino João da Cruz Júnior <sjcj2>** | [juniorcruz7](https://github.com/juniorcruz7) | <img src="https://avatars.githubusercontent.com/u/224153797?v=4" width="80px"> |
-| **Lucas Fernandes da Silva <lfcs4>** | [LucasFernandesCS](https://github.com/LucasFernandesCS) | <img src="https://avatars.githubusercontent.com/u/207383959?v=4" width="80px"> |
+| **Lucas Fernandes Candido da Silva <lfcs4>** | [LucasFernandesCS](https://github.com/LucasFernandesCS) | <img src="https://avatars.githubusercontent.com/u/207383959?v=4" width="80px"> |
 | **Luiz Taiguara de Oliveira <ltog>** | [LuizTaiguara](https://github.com/LuizTaiguara) | <img src="https://avatars.githubusercontent.com/u/172301670?v=4" width="80px"> |
 | **Tiago Lucena de Mattos <tlm2>** | [tiagolmattos06](https://github.com/tiagolmattos06) | <img src="https://avatars.githubusercontent.com/u/223951608?v=4" width="80px"> |
-
