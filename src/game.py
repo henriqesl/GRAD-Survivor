@@ -1,5 +1,3 @@
-# game.py
-
 from settings import *
 from player import Player
 from mouse import Mouse
