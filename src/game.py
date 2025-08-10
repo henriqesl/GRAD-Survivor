@@ -10,8 +10,15 @@ class Game:
         pygame.init() 
         pygame.display.set_caption("GRAD-Survivor")
         self.screen = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
+        self.game_surface = pygame.Surface((MAP_WIDTH, MAP_HEIGHT))
         self.clock = pygame.time.Clock()
         self.map = pygame.image.load('assets/images/mapa1.0.png').convert()
+
+        pygame.mixer.music.load('assets/sounds/interstellar.mp3')
+        pygame.mixer.music.set_volume(0.4)
+
+        self.heart_full_img = pygame.image.load('assets/images/coracao.png')
+        self.heart_empty_img = pygame.image.load('assets/images/coracao_apagado.png')
 
         # --- GRUPOS ---
         self.all_sprites = pygame.sprite.Group()
@@ -30,7 +37,7 @@ class Game:
         Obstacles(self.collision_sprites)
 
         self.player_principal = Player(
-            (WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2),
+            (MAP_WIDTH / 2, MAP_HEIGHT / 2),
             [self.all_sprites],
             self.collision_sprites,
             self
@@ -54,8 +61,10 @@ class Game:
         self.all_sprites.add(self.player_principal)
 
     def run(self):
+        pygame.mixer.music.play(loops=1)
+
         while True:
-            dt = self.clock.tick(60) / 1000
+            dt = self.clock.tick(FPS) / 1000
 
             # --- EVENTOS ---
             for event in pygame.event.get():
@@ -106,9 +115,13 @@ class Game:
                     aplicar_poder(self.player_principal, item.funcao)
 
                 # --- DESENHO ---
-                self.screen.blit(self.map, (0, 0))
-                self.all_sprites.draw(self.screen)
-                self.draw_ui()
+                if self.game_active:
+                    self.game_surface.blit(self.map, (0, 0))
+                    self.all_sprites.draw(self.game_surface)
+
+                    self.screen.fill((25, 25, 35)) # Cor escura para o HUD
+                    self.screen.blit(self.game_surface, (0, HUD_HEIGHT))
+                    self.draw_ui()
             
             else:
                 if self.win_condition:
@@ -129,29 +142,36 @@ class Game:
             pygame.display.flip()
 
     def draw_ui(self):
-        # --- Lógica para desenhar a interface do usuário (vidas e horda) ---
-        font = pygame.font.Font(None, 36)
-        
-        lives_text = font.render(f'Vidas: {self.player_principal.lives}', True, (255, 255, 255))
-        lives_rect = lives_text.get_rect(topleft=(20, 20))
-        self.screen.blit(lives_text, lives_rect)
+        for i in range(self.player_principal.max_lives):
+            pos_x = 30 + i * (self.heart_full_img.get_width() + 6)
+            heart_rect = self.heart_full_img.get_rect(topleft=(pos_x, 0))
+            heart_rect.centery = HUD_HEIGHT / 2
+            
+            if i < self.player_principal.lives:
+                self.screen.blit(self.heart_full_img, heart_rect)
+            else:
+                self.screen.blit(self.heart_empty_img, heart_rect)
 
+        font = pygame.font.Font(None, 40)
         wave_text = font.render(f'Horda: {self.monster_manager.wave}', True, (255, 255, 255))
-        wave_rect = wave_text.get_rect(topright=(WINDOW_WIDTH - 20, 20))
+        wave_rect = wave_text.get_rect(topright=(WINDOW_WIDTH - 30, 0))
+        wave_rect.centery = HUD_HEIGHT / 2
         self.screen.blit(wave_text, wave_rect)
 
     def check_shooting(self):
         mouse_buttons = pygame.mouse.get_pressed()
-        if mouse_buttons[0]:
+        if mouse_buttons[0] and pygame.mouse.get_pos()[1] > HUD_HEIGHT:
             current_time = pygame.time.get_ticks()
             if current_time - self.last_shot_time > self.shoot_delay:
                 self.last_shot_time = current_time
                 self.shoot_mouse()
 
     def shoot_mouse(self):
-        mouse_pos = pygame.mouse.get_pos()
+        mouse_pos_screen = pygame.mouse.get_pos()
+        mouse_pos_game = (mouse_pos_screen[0], mouse_pos_screen[1] - HUD_HEIGHT)
+
         player_pos = self.player_principal.rect.center
-        direction = pygame.Vector2(mouse_pos) - pygame.Vector2(player_pos)
+        direction = pygame.Vector2(mouse_pos_game) - pygame.Vector2(player_pos)
         if direction.length() > 0:
             direction.normalize_ip()
         Mouse(pos=player_pos, direction=direction, groups=[self.all_sprites, self.mouse_sprites])
