@@ -7,15 +7,30 @@ class Monstro(pygame.sprite.Sprite):
         super().__init__()
         self.tipo = tipo
 
-        if tipo == 'monstro':
-            caminho_imagem = os.path.join(BASE_IMG_PATH, 'monstro_sprite.png')
-            self.vida = 1
-        else:
-            caminho_imagem = os.path.join(BASE_IMG_PATH, 'sprite_1_resized.png')
-            self.vida = 2
 
-        imagem_original = pygame.image.load(caminho_imagem).convert_alpha()
-        self.image = pygame.transform.scale(imagem_original, (50, 50))
+        # --- Carregar sprites por direção ---
+        if tipo == 'monstro':
+            self.vida = 1
+            self.frames = {
+                'left':  [pygame.transform.scale(pygame.image.load(os.path.join(BASE_IMG_PATH, 'monstro sprite_esquerda.png')).convert_alpha(), (50, 50))],
+                'right': [pygame.transform.scale(pygame.image.load(os.path.join(BASE_IMG_PATH, 'monstro_sprite_direita.png')).convert_alpha(), (50, 50))],
+                'up':    [pygame.transform.scale(pygame.image.load(os.path.join(BASE_IMG_PATH, 'monstro_sprite_costas.png')).convert_alpha(), (50, 50))],
+                'down':  [pygame.transform.scale(pygame.image.load(os.path.join(BASE_IMG_PATH, 'monstro_sprite.png')).convert_alpha(), (50, 50))]
+            }
+        else:
+            self.vida = 2
+            self.frames = {
+                'left':  [pygame.transform.scale(pygame.image.load(os.path.join(BASE_IMG_PATH, 'robo_esquerda_sprite.png')).convert_alpha(), (50, 50))],
+                'right': [pygame.transform.scale(pygame.image.load(os.path.join(BASE_IMG_PATH, 'robo_direita_sprite.png')).convert_alpha(), (50, 50))],
+                'up':    [pygame.transform.scale(pygame.image.load(os.path.join(BASE_IMG_PATH, 'robo_costas_sprite.png')).convert_alpha(), (50, 50))],
+                'down':  [pygame.transform.scale(pygame.image.load(os.path.join(BASE_IMG_PATH, 'robo_frente_sprite.png')).convert_alpha(), (50, 50))]
+            }
+
+        # Começa olhando para baixo
+        self.state = 'down'
+        self.image = self.frames[self.state][0]
+
+
         self.rect = self.image.get_rect(center=posicao_inicial)
         self.velocidade = velocidade
     
@@ -25,6 +40,14 @@ class Monstro(pygame.sprite.Sprite):
     def seguir_jogador(self, pos_jogador, dt):
         direcao = pygame.Vector2(pos_jogador) - self.posicao
         
+        # Atualiza sprite com base na direção
+        if abs(direcao.x) > abs(direcao.y):
+            self.state = 'right' if direcao.x > 0 else 'left'
+        else:
+            self.state = 'down' if direcao.y > 0 else 'up'
+
+        self.image = self.frames[self.state][0]
+
         if direcao.length() > 0:  
             direcao.normalize_ip() 
 
