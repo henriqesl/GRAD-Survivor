@@ -5,11 +5,13 @@ from enemies import Monstro
 EVENTO_SPAWN_MONSTRO = pygame.USEREVENT + 1
 
 class MonsterManager:
-    def __init__(self, all_sprites_group, monster_sprites_group):
+    def __init__(self, all_sprites_group, monster_sprites_group, collision_sprites):
         self.all_sprites = all_sprites_group
         self.monster_sprites = monster_sprites_group
+        self.collision_sprites = collision_sprites
+
         
-        self.pontos_de_spawn = [(20, 80), (20, 520), (780, 520), (780, 80)]
+        self.pontos_de_spawn = [(20, 85), (20, 525), (780, 525), (780, 85)]
         
         self.reset()
 
@@ -34,7 +36,7 @@ class MonsterManager:
             tipo = 'monstro'
             velocidade = self.velocidade_monstro
             
-        monstro = Monstro(tipo, ponto_spawn, velocidade)
+        monstro = Monstro(tipo, ponto_spawn, velocidade, self.collision_sprites)
         monstro.aumentar_vida(self.wave)
         
         self.all_sprites.add(monstro)

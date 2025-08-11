@@ -22,7 +22,7 @@ class Game:
         self.mouse_sprites = pygame.sprite.Group()
         self.collectible_items = pygame.sprite.Group()
 
-        self.monster_manager = MonsterManager(self.all_sprites, self.monster_sprites)
+        self.monster_manager = MonsterManager(self.all_sprites, self.monster_sprites, self.collision_sprites)
         self.game_active = True
 
         self.shoot_delay = 300
