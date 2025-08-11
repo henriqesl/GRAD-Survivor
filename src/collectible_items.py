@@ -14,11 +14,11 @@ class ItemColetavel(pygame.sprite.Sprite):
 def drop_item(pos, imagens, grupos):
     numero = random.randint(1, 100)
 
-    if 10 < numero <= 15:
+    if 20 < numero <= 30:
         item = ItemColetavel(pos, 'cracha', imagens['cracha'])
-    elif 5 < numero <= 10:
+    elif 10 < numero <= 20:
         item = ItemColetavel(pos, 'redbull', imagens['redbull'])
-    elif 10 < numero <= 5:
+    elif 0 < numero <= 10:
         item = ItemColetavel(pos, 'subway', imagens['subway'])
     else:
         return
