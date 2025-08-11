@@ -39,7 +39,7 @@ class Player(pygame.sprite.Sprite):
             self.last_hit_time = current_time
     
     def check_invincibility(self):
-        """Verifica se o tempo de invencibilidade já passou."""
+
         if self.invincible:
             current_time = pygame.time.get_ticks()
             if current_time - self.last_hit_time > self.invincibility_duration:
@@ -146,10 +146,9 @@ class Player(pygame.sprite.Sprite):
         self.check_invincibility()
 
         if self.invincible:
-            # Faz a imagem piscar
             alpha = 128 if pygame.time.get_ticks() % 200 < 100 else 255
             self.image.set_alpha(alpha)
         elif self.intangivel:
             pass
         else:
-            self.image.set_alpha(255) # Garante que a imagem volte ao normal
+            self.image.set_alpha(255)
