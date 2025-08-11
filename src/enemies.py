@@ -1,4 +1,4 @@
-from settings import *
+from .settings import *
 
 BASE_IMG_PATH = os.path.join(os.path.dirname(__file__), '..', 'assets', 'images')
 

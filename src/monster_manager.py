@@ -1,6 +1,6 @@
 import pygame
 import random
-from enemies import Monstro
+from .enemies import Monstro
 
 EVENTO_SPAWN_MONSTRO = pygame.USEREVENT + 1
 

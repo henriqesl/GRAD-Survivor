@@ -1,9 +1,9 @@
-from settings import *
-from player import Player
-from mouse import Mouse
-from obstacles import Obstacles
-from monster_manager import MonsterManager, EVENTO_SPAWN_MONSTRO
-from collectible_items import drop_item, aplicar_poder
+from .settings import *
+from .player import Player
+from .mouse import Mouse
+from .obstacles import Obstacles
+from .monster_manager import MonsterManager, EVENTO_SPAWN_MONSTRO
+from .collectible_items import drop_item, aplicar_poder
 
 class Game:
     def __init__(self):
@@ -176,6 +176,3 @@ class Game:
             direction.normalize_ip()
         Mouse(pos=player_pos, direction=direction, groups=[self.all_sprites, self.mouse_sprites])
 
-if __name__ == '__main__':
-    jogo = Game()
-    jogo.run()

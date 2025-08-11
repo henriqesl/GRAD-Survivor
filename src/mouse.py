@@ -1,4 +1,4 @@
-from settings import *
+from .settings import *
 
 def load_mouse_image():
     script_dir = os.path.dirname(__file__)

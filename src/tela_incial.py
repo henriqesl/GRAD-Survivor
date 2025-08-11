@@ -1,5 +1,4 @@
-import pygame
-from settings import WINDOW_WIDTH, WINDOW_HEIGHT
+from .settings import *
 
 class TelaInicial:
     def __init__(self, screen):
