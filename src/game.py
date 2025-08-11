@@ -61,7 +61,7 @@ class Game:
         self.all_sprites.add(self.player_principal)
 
     def run(self):
-        pygame.mixer.music.play(loops=1)
+        pygame.mixer.music.play(loops=-1)
 
         while True:
             dt = self.clock.tick(FPS) / 1000
