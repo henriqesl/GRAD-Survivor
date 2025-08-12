@@ -5,6 +5,7 @@ from .obstacles import Obstacles
 from .monster_manager import MonsterManager, EVENTO_SPAWN_MONSTRO
 from .collectible_items import drop_item, aplicar_poder
 
+
 class Game:
     def __init__(self):
         pygame.init() 
@@ -30,6 +31,8 @@ class Game:
         self.monster_manager = MonsterManager(self.all_sprites, self.monster_sprites, self.collision_sprites)
         self.game_active = True
         self.win_condition = False
+        self.itens_coletados = {'cracha': 0, 'redbull': 0, 'subway': 0}
+        self.inimigos_eliminados = 0
 
         self.shoot_delay = 300
         self.last_shot_time = 0
@@ -59,6 +62,8 @@ class Game:
         self.collectible_items.empty()
         self.all_sprites.empty()
         self.all_sprites.add(self.player_principal)
+        self.itens_coletados = {'cracha': 0, 'redbull': 0, 'subway': 0}
+        self.inimigos_eliminados = 0
 
     def run(self):
         pygame.mixer.music.play(loops=-1)
@@ -100,6 +105,7 @@ class Game:
                     for monstro in monstros:
                         monstro.vida -= 1
                         if monstro.vida <= 0:
+                            self.inimigos_eliminados += 1
                             drop_item(monstro.rect.center, self.item_imagens, [self.all_sprites, self.collectible_items])
                             monstro.kill()
                 
@@ -112,7 +118,11 @@ class Game:
 
                 coletados = pygame.sprite.spritecollide(self.player_principal, self.collectible_items, True)
                 for item in coletados:
+                    if item.funcao in self.itens_coletados:
+                        self.itens_coletados[item.funcao] += 1
+                    
                     aplicar_poder(self.player_principal, item.funcao)
+
 
                 # --- DESENHO ---
                 if self.game_active:
@@ -131,6 +141,8 @@ class Game:
                     texto = font.render("Você Venceu! Pressione ESPAÇO.", True, (255, 255, 255))
                     rect_texto = texto.get_rect(center=(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2))
                     self.screen.blit(texto, rect_texto)
+
+                    self.draw_end_game_report(WINDOW_HEIGHT / 2 + 50)
                 else:
                     # Tela de Game Over
                     self.screen.fill((0, 0, 0))
@@ -138,8 +150,34 @@ class Game:
                     texto = font.render("Game Over! Pressione ESPAÇO para reiniciar.", True, (255, 255, 255))
                     rect_texto = texto.get_rect(center=(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2))
                     self.screen.blit(texto, rect_texto)
+
+                    self.draw_end_game_report(WINDOW_HEIGHT / 2 + 50)
             
             pygame.display.flip()
+
+    def draw_end_game_report(self, y_start):
+        # --- Relatório de Fim de Jogo ---
+        font_titulo = pygame.font.Font(None, 40)
+        font_item = pygame.font.Font(None, 32)
+        cor_texto = (255, 255, 255)
+        y_offset = y_start
+        
+        inimigos_texto = font_titulo.render(f"Inimigos Eliminados: {self.inimigos_eliminados}", True, cor_texto)
+        inimigos_rect = inimigos_texto.get_rect(center=(WINDOW_WIDTH / 2, y_offset))
+        self.screen.blit(inimigos_texto, inimigos_rect)
+        y_offset += 60
+
+        texto_relatorio = font_titulo.render("Itens Coletados:", True, cor_texto)
+        rect_relatorio = texto_relatorio.get_rect(center=(WINDOW_WIDTH / 2, y_offset))
+        self.screen.blit(texto_relatorio, rect_relatorio)
+        y_offset += 40
+
+        for item, quantidade in self.itens_coletados.items():
+            nome_item_formatado = item.capitalize()
+            texto_item = font_item.render(f"{nome_item_formatado}: {quantidade}", True, cor_texto)
+            rect_item = texto_item.get_rect(center=(WINDOW_WIDTH / 2, y_offset))
+            self.screen.blit(texto_item, rect_item)
+            y_offset += 30
 
     def draw_ui(self):
         for i in range(self.player_principal.max_lives):
