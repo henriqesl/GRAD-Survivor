@@ -1,6 +1,6 @@
 import pygame
 import random
-from .enemies import Monstro
+from .enemies import Monstro, Robo
 
 EVENTO_SPAWN_MONSTRO = pygame.USEREVENT + 1
 
@@ -53,13 +53,10 @@ class MonsterManager:
         ponto_spawn = random.choice(self.pontos_de_spawn)
 
         if self.wave >= 3 and random.random() < 0.3:
-            tipo = 'robot'
-            velocidade = self.velocidade_robot
+            monstro = Robo(ponto_spawn, self.velocidade_robot, self.collision_sprites)
         else:
-            tipo = 'monstro'
-            velocidade = self.velocidade_monstro
+            monstro = Monstro(ponto_spawn, self.velocidade_monstro, self.collision_sprites)
 
-        monstro = Monstro(tipo, ponto_spawn, velocidade, self.collision_sprites)
         monstro.aumentar_vida(self.wave)
 
         self.all_sprites.add(monstro)
