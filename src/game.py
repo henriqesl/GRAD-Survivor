@@ -4,22 +4,24 @@ from .mouse import Mouse
 from .obstacles import Obstacles
 from .monster_manager import MonsterManager, EVENTO_SPAWN_MONSTRO
 from .collectible_items import drop_item, aplicar_poder
+from . import game_data
 
-
+# algumas partes do codigo em ingles e outras em port
 class Game:
     def __init__(self):
         pygame.init() 
-        pygame.display.set_caption("GRAD-Survivor")
+        pygame.display.set_caption(game_data.ASSET_PATHS['caption'])
         self.screen = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
         self.game_surface = pygame.Surface((MAP_WIDTH, MAP_HEIGHT))
         self.clock = pygame.time.Clock()
-        self.map = pygame.image.load('assets/images/mapa1.0.png').convert()
+        self.map = pygame.image.load(game_data.ASSET_PATHS['map']).convert()
 
-        pygame.mixer.music.load('assets/sounds/interstellar.mp3')
+        pygame.mixer.music.load(game_data.ASSET_PATHS['music'])
         pygame.mixer.music.set_volume(0.4)
 
-        self.heart_full_img = pygame.image.load('assets/images/coracao.png')
-        self.heart_empty_img = pygame.image.load('assets/images/coracao_apagado.png')
+        self.heart_full_img = pygame.image.load(game_data.ASSET_PATHS['heart_full'])
+        self.heart_empty_img = pygame.image.load(game_data.ASSET_PATHS['heart_empty'])
+
 
         # --- GRUPOS ---
         self.all_sprites = pygame.sprite.Group()
@@ -34,7 +36,7 @@ class Game:
         self.itens_coletados = {'cracha': 0, 'redbull': 0, 'subway': 0}
         self.inimigos_eliminados = 0
 
-        self.shoot_delay = 300
+        self.shoot_delay = game_data.PLAYER_DATA['shoot_delay']
         self.last_shot_time = 0
         
         Obstacles(self.collision_sprites)
@@ -47,10 +49,9 @@ class Game:
         )
 
         self.item_imagens = {
-            'cracha': pygame.image.load('assets/images/cracha.png').convert_alpha(),
-            'redbull': pygame.image.load('assets/images/redbull.png').convert_alpha(),
-            'subway': pygame.image.load('assets/images/subway.png').convert_alpha(),
-        }
+            name: pygame.image.load(data['image_path']).convert_alpha()
+            for name, data in game_data.ITEM_DATA.items()
+            }
 
     def reset_game(self):
         # --- REINICIA A PARTIDA ---

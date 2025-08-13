@@ -1,4 +1,5 @@
 from .settings import *
+from . import game_data
 
 BASE_IMG_PATH = os.path.join(os.path.dirname(__file__), '..', 'assets', 'images')
 
@@ -72,21 +73,25 @@ class MonstroBase(pygame.sprite.Sprite):
 
 class Monstro(MonstroBase):
     def __init__(self, posicao_inicial, velocidade, collision_sprites):
+        data = game_data.ENEMY_DATA['monstro']
+        paths = data['sprite_paths']
         frames = {
-            'left':  [pygame.transform.scale(pygame.image.load(os.path.join(BASE_IMG_PATH, 'monstro sprite_esquerda.png')).convert_alpha(), (50, 50))],
-            'right': [pygame.transform.scale(pygame.image.load(os.path.join(BASE_IMG_PATH, 'monstro_sprite_direita.png')).convert_alpha(), (50, 50))],
-            'up':    [pygame.transform.scale(pygame.image.load(os.path.join(BASE_IMG_PATH, 'monstro_sprite_costas.png')).convert_alpha(), (50, 50))],
-            'down':  [pygame.transform.scale(pygame.image.load(os.path.join(BASE_IMG_PATH, 'monstro_sprite.png')).convert_alpha(), (50, 50))]
+            'left':  [pygame.transform.scale(pygame.image.load(paths['left']).convert_alpha(), (50, 50))],
+            'right': [pygame.transform.scale(pygame.image.load(paths['right']).convert_alpha(), (50, 50))],
+            'up':    [pygame.transform.scale(pygame.image.load(paths['up']).convert_alpha(), (50, 50))],
+            'down':  [pygame.transform.scale(pygame.image.load(paths['down']).convert_alpha(), (50, 50))]
         }
-        super().__init__(posicao_inicial, velocidade, collision_sprites, vida=1, frames=frames)
+        super().__init__(posicao_inicial, velocidade, collision_sprites, vida=data['health'], frames=frames)
 
 
 class Robo(MonstroBase):
     def __init__(self, posicao_inicial, velocidade, collision_sprites):
+        data = game_data.ENEMY_DATA['robo']
+        paths = data['sprite_paths']
         frames = {
-            'left':  [pygame.transform.scale(pygame.image.load(os.path.join(BASE_IMG_PATH, 'robo_esquerda_sprite.png')).convert_alpha(), (50, 50))],
-            'right': [pygame.transform.scale(pygame.image.load(os.path.join(BASE_IMG_PATH, 'robo_direita_sprite.png')).convert_alpha(), (50, 50))],
-            'up':    [pygame.transform.scale(pygame.image.load(os.path.join(BASE_IMG_PATH, 'robo_costas_sprite.png')).convert_alpha(), (50, 50))],
-            'down':  [pygame.transform.scale(pygame.image.load(os.path.join(BASE_IMG_PATH, 'robo_frente_sprite.png')).convert_alpha(), (50, 50))]
+            'left':  [pygame.transform.scale(pygame.image.load(paths['left']).convert_alpha(), (50, 50))],
+            'right': [pygame.transform.scale(pygame.image.load(paths['right']).convert_alpha(), (50, 50))],
+            'up':    [pygame.transform.scale(pygame.image.load(paths['up']).convert_alpha(), (50, 50))],
+            'down':  [pygame.transform.scale(pygame.image.load(paths['down']).convert_alpha(), (50, 50))]
         }
-        super().__init__(posicao_inicial, velocidade, collision_sprites, vida=2, frames=frames)
+        super().__init__(posicao_inicial, velocidade, collision_sprites, vida=data['health'], frames=frames)
