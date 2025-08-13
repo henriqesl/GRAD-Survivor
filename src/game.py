@@ -54,6 +54,17 @@ class Game:
             name: pygame.image.load(data['image_path']).convert_alpha()
             for name, data in game_data.ITEM_DATA.items()
             }
+        
+        self.item_imagens = {
+            name: pygame.image.load(data['image_path']).convert_alpha()
+            for name, data in game_data.ITEM_DATA.items()
+            }
+            
+        self.win_screen_img = pygame.image.load("assets/images/win.png").convert()
+        self.win_screen_img = pygame.transform.scale(self.win_screen_img, (WINDOW_WIDTH, WINDOW_HEIGHT))
+        
+        self.game_over_screen_img = pygame.image.load("assets/images/gameover.png").convert()
+        self.game_over_screen_img = pygame.transform.scale(self.game_over_screen_img, (WINDOW_WIDTH, WINDOW_HEIGHT))
 
     def reset_game(self):
         self.player_principal.reset()
@@ -66,8 +77,8 @@ class Game:
         self.inimigos_eliminados = 0
 
     def run(self):
-        # A música agora só começa quando o jogo de fato inicia, e não na tela de título.
-        
+    # A música agora só começa quando o jogo de fato inicia, e não na tela de título.
+    
         while True:
             dt = self.clock.tick(FPS) / 1000
 
@@ -102,6 +113,7 @@ class Game:
 
             # Estado: JOGANDO
             elif self.game_state == 'playing':
+                # (Todo o seu código de lógica do jogo continua aqui, sem alterações)
                 # --- ATUALIZAÇÕES ---
                 self.player_principal.update(dt)
                 self.monster_sprites.update(dt, self.player_principal)
@@ -109,13 +121,11 @@ class Game:
                 self.monster_manager.update()
                 self.collectible_items.update()
                 self.check_shooting()
-
-                # --- MUDANÇA DE ESTADO (de 'playing' para 'win' ou 'game_over') ---
+                # --- MUDANÇA DE ESTADO ---
                 if self.monster_manager.game_won:
                     self.game_state = 'win'
                 if self.player_principal.lives <= 0:
                     self.game_state = 'game_over'
-
                 # --- COLISÕES ---
                 colisoes_tiro_monstro = pygame.sprite.groupcollide(self.mouse_sprites, self.monster_sprites, True, False)
                 for projeteis, monstros in colisoes_tiro_monstro.items():
@@ -125,16 +135,13 @@ class Game:
                             self.inimigos_eliminados += 1
                             drop_item(monstro.rect.center, self.item_imagens, [self.all_sprites, self.collectible_items])
                             monstro.kill()
-                
                 if pygame.sprite.spritecollide(self.player_principal, self.monster_sprites, False):
                     self.player_principal.take_damage()
-                
                 coletados = pygame.sprite.spritecollide(self.player_principal, self.collectible_items, True)
                 for item in coletados:
                     if item.funcao in self.itens_coletados:
                         self.itens_coletados[item.funcao] += 1
                     aplicar_poder(self.player_principal, item.funcao)
-
                 # --- DESENHO ---
                 self.game_surface.blit(self.map, (0, 0))
                 self.all_sprites.draw(self.game_surface)
@@ -142,50 +149,52 @@ class Game:
                 self.screen.blit(self.game_surface, (0, HUD_HEIGHT))
                 self.draw_ui()
             
-            # Estado: VITÓRIA
+            # --- MUDANÇA: Estado VITÓRIA ---
             elif self.game_state == 'win':
-                self.screen.fill((20, 100, 20))
-                font = pygame.font.Font(None, 48)
-                texto = font.render("Você Venceu! Pressione ESPAÇO.", True, (255, 255, 255))
-                rect_texto = texto.get_rect(center=(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2))
-                self.screen.blit(texto, rect_texto)
-                self.draw_end_game_report(WINDOW_HEIGHT / 2 + 50)
+                # Desenha a imagem de fundo de vitória
+                self.screen.blit(self.win_screen_img, (0, 0))
+                # Desenha o relatório de estatísticas por cima (MAIS PARA BAIXO)
+                self.draw_end_game_report(WINDOW_HEIGHT / 2 + 220)
 
-            # Estado: GAME OVER
+        # --- MUDANÇA: Estado GAME OVER ---
             elif self.game_state == 'game_over':
-                self.screen.fill((0, 0, 0))
-                font = pygame.font.Font(None, 48)
-                texto = font.render("Game Over! Pressione ESPAÇO para reiniciar.", True, (255, 255, 255))
-                rect_texto = texto.get_rect(center=(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2))
-                self.screen.blit(texto, rect_texto)
-                self.draw_end_game_report(WINDOW_HEIGHT / 2 + 50)
+                # Desenha a imagem de fundo de game over
+                self.screen.blit(self.game_over_screen_img, (0, 0))
+                # Desenha o relatório de estatísticas por cima (MAIS PARA BAIXO)
+                self.draw_end_game_report(WINDOW_HEIGHT / 2 + 180)
             
             # Atualiza a tela inteira no final do loop, independentemente do estado
             pygame.display.flip()
 
     def draw_end_game_report(self, y_start):
         # --- Relatório de Fim de Jogo ---
-        font_titulo = pygame.font.Font(None, 40)
-        font_item = pygame.font.Font(None, 32)
+        # FONTES DIMINUÍDAS
+        font_titulo = pygame.font.Font(None, 32) 
+        font_item = pygame.font.Font(None, 28)
         cor_texto = (255, 255, 255)
         y_offset = y_start
         
         inimigos_texto = font_titulo.render(f"Inimigos Eliminados: {self.inimigos_eliminados}", True, cor_texto)
         inimigos_rect = inimigos_texto.get_rect(center=(WINDOW_WIDTH / 2, y_offset))
         self.screen.blit(inimigos_texto, inimigos_rect)
-        y_offset += 60
+        
+        # ESPAÇAMENTO DIMINUÍDO
+        y_offset += 35 
 
         texto_relatorio = font_titulo.render("Itens Coletados:", True, cor_texto)
         rect_relatorio = texto_relatorio.get_rect(center=(WINDOW_WIDTH / 2, y_offset))
         self.screen.blit(texto_relatorio, rect_relatorio)
-        y_offset += 40
+        
+        # ESPAÇAMENTO DIMINUÍDO
+        y_offset += 25
 
         for item, quantidade in self.itens_coletados.items():
             nome_item_formatado = item.capitalize()
             texto_item = font_item.render(f"{nome_item_formatado}: {quantidade}", True, cor_texto)
             rect_item = texto_item.get_rect(center=(WINDOW_WIDTH / 2, y_offset))
             self.screen.blit(texto_item, rect_item)
-            y_offset += 30
+            # ESPAÇAMENTO DIMINUÍDO
+            y_offset += 28 
 
     def draw_ui(self):
         for i in range(self.player_principal.max_lives):
