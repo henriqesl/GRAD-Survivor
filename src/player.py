@@ -1,4 +1,6 @@
 from .settings import *
+from . import game_data
+
 
 class Player(pygame.sprite.Sprite):
     def __init__(self, pos, groups, collision_sprites, game_backup):
@@ -11,16 +13,15 @@ class Player(pygame.sprite.Sprite):
         self.hitbox_rect = self.rect.inflate(-30, 0) 
     
         self.direction = pygame.Vector2()
-        self.speed = 220
-        self.base_speed = 220
+        self.speed = game_data.PLAYER_DATA['speed'] 
+        self.base_speed = game_data.PLAYER_DATA['speed']
         self.collision_sprites = collision_sprites
 
-        # --- LÓGICA DE VIDAS E INVENCIBILIDADE ---
-        self.max_lives = 3
+        # --- LÓGICA DE VIDAS E INVENCIBILIDADE --- 
+        self.max_lives = game_data.PLAYER_DATA['max_lives']
         self.lives = self.max_lives
         self.invincible = False
-        self.invincibility_duration = 1500
-        self.last_hit_time = 0
+        self.invincibility_duration = game_data.PLAYER_DATA['invincibility_duration']
 
         # --- PODERES E TIMERS ---
         self.power_timers = {
@@ -53,12 +54,13 @@ class Player(pygame.sprite.Sprite):
 
     def load_images(self):
         # --- Carregar Sprites ---
+        paths = game_data.PLAYER_DATA['sprite_paths']
         self.frames = {
-            'left':  [pygame.image.load('assets/images/sprite_2_resized.png').convert_alpha()],
-            'right': [pygame.image.load('assets/images/sprite_3_resized.png').convert_alpha()],
-            'up':    [pygame.image.load('assets/images/sprite_4_resized.png').convert_alpha()],
-            'down':  [pygame.image.load('assets/images/sprite_1_resized.png').convert_alpha()]
-        }
+                        'left':  [pygame.image.load(paths['left']).convert_alpha()],
+                        'right': [pygame.image.load(paths['right']).convert_alpha()],
+                        'up':    [pygame.image.load(paths['up']).convert_alpha()],
+                        'down':  [pygame.image.load(paths['down']).convert_alpha()]
+                        }
 
         for key, frames_list in self.frames.items():
             for i in range(len(frames_list)):

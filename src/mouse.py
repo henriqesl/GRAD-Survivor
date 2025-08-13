@@ -1,9 +1,10 @@
 from .settings import *
+from . import game_data
 
 def load_mouse_image():
     script_dir = os.path.dirname(__file__)
     assets_path = os.path.join(script_dir, '..', 'assets', 'images')
-    mouse_img_original = pygame.image.load(os.path.join(assets_path, 'mouse.png')).convert_alpha()
+    mouse_img_original = pygame.image.load(game_data.ASSET_PATHS['projectile']).convert_alpha()
     return pygame.transform.scale(mouse_img_original, (25, 15))
 
 # --- CLASSE QUE REPRESENTA O PROJÉTIL (MOUSE) ---
