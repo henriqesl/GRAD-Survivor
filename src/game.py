@@ -5,6 +5,7 @@ from .obstacles import Obstacles
 from .monster_manager import MonsterManager, EVENTO_SPAWN_MONSTRO
 from .collectible_items import drop_item, aplicar_poder
 from . import game_data
+from .tela_inicial import TelaInicial
 
 # algumas partes do codigo em ingles e outras em port
 class Game:
@@ -19,9 +20,11 @@ class Game:
         pygame.mixer.music.load(game_data.ASSET_PATHS['music'])
         pygame.mixer.music.set_volume(0.4)
 
+        self.game_state = 'start_screen' # Começa na tela inicial
+        self.tela_inicial = TelaInicial(self.screen)
+
         self.heart_full_img = pygame.image.load(game_data.ASSET_PATHS['heart_full'])
         self.heart_empty_img = pygame.image.load(game_data.ASSET_PATHS['heart_empty'])
-
 
         # --- GRUPOS ---
         self.all_sprites = pygame.sprite.Group()
@@ -31,8 +34,7 @@ class Game:
         self.collectible_items = pygame.sprite.Group()
 
         self.monster_manager = MonsterManager(self.all_sprites, self.monster_sprites, self.collision_sprites)
-        self.game_active = True
-        self.win_condition = False
+        
         self.itens_coletados = {'cracha': 0, 'redbull': 0, 'subway': 0}
         self.inimigos_eliminados = 0
 
@@ -54,9 +56,6 @@ class Game:
             }
 
     def reset_game(self):
-        # --- REINICIA A PARTIDA ---
-        self.game_active = True
-        self.win_condition = False
         self.player_principal.reset()
         self.monster_manager.reset()
         self.mouse_sprites.empty()
@@ -67,38 +66,55 @@ class Game:
         self.inimigos_eliminados = 0
 
     def run(self):
-        pygame.mixer.music.play(loops=-1)
-
+        # A música agora só começa quando o jogo de fato inicia, e não na tela de título.
+        
         while True:
             dt = self.clock.tick(FPS) / 1000
 
-            # --- EVENTOS ---
+            # --- PROCESSAMENTO DE EVENTOS ---
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     exit()
 
-                if self.game_active:
+                # Eventos da TELA INICIAL
+                if self.game_state == 'start_screen':
+                    if self.tela_inicial.handle_event(event):
+                        self.game_state = 'playing'
+                        pygame.mixer.music.play(loops=-1) # Inicia a música aqui
+
+                # Eventos DURANTE O JOGO
+                elif self.game_state == 'playing':
                     if event.type == EVENTO_SPAWN_MONSTRO:
                         self.monster_manager.spawn_monster()
-                else: 
+
+                # Eventos nas telas de FIM DE JOGO (Vitória ou Game Over)
+                elif self.game_state in ('win', 'game_over'):
                     if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
                         self.reset_game()
+                        self.game_state = 'playing'
 
-            # --- LÓGICA PRINCIPAL DO JOGO ---
-            if self.game_active:
+            # --- LÓGICA E DESENHO BASEADOS NO ESTADO ---
+            
+            # Estado: TELA INICIAL
+            if self.game_state == 'start_screen':
+                self.tela_inicial.update()
+
+            # Estado: JOGANDO
+            elif self.game_state == 'playing':
                 # --- ATUALIZAÇÕES ---
                 self.player_principal.update(dt)
                 self.monster_sprites.update(dt, self.player_principal)
                 self.mouse_sprites.update(dt)
                 self.monster_manager.update()
-
-                if self.monster_manager.game_won:
-                    self.game_active = False
-                    self.win_condition = True
-
-                self.check_shooting()
                 self.collectible_items.update()
+                self.check_shooting()
+
+                # --- MUDANÇA DE ESTADO (de 'playing' para 'win' ou 'game_over') ---
+                if self.monster_manager.game_won:
+                    self.game_state = 'win'
+                if self.player_principal.lives <= 0:
+                    self.game_state = 'game_over'
 
                 # --- COLISÕES ---
                 colisoes_tiro_monstro = pygame.sprite.groupcollide(self.mouse_sprites, self.monster_sprites, True, False)
@@ -110,50 +126,41 @@ class Game:
                             drop_item(monstro.rect.center, self.item_imagens, [self.all_sprites, self.collectible_items])
                             monstro.kill()
                 
-                monsters_hit = pygame.sprite.spritecollide(self.player_principal, self.monster_sprites, False)
-                if monsters_hit:
+                if pygame.sprite.spritecollide(self.player_principal, self.monster_sprites, False):
                     self.player_principal.take_damage()
                 
-                if self.player_principal.lives <= 0:
-                    self.game_active = False
-
                 coletados = pygame.sprite.spritecollide(self.player_principal, self.collectible_items, True)
                 for item in coletados:
                     if item.funcao in self.itens_coletados:
                         self.itens_coletados[item.funcao] += 1
-                    
                     aplicar_poder(self.player_principal, item.funcao)
 
-
                 # --- DESENHO ---
-                if self.game_active:
-                    self.game_surface.blit(self.map, (0, 0))
-                    self.all_sprites.draw(self.game_surface)
-
-                    self.screen.fill((25, 25, 35)) # Cor escura para o HUD
-                    self.screen.blit(self.game_surface, (0, HUD_HEIGHT))
-                    self.draw_ui()
+                self.game_surface.blit(self.map, (0, 0))
+                self.all_sprites.draw(self.game_surface)
+                self.screen.fill((25, 25, 35))
+                self.screen.blit(self.game_surface, (0, HUD_HEIGHT))
+                self.draw_ui()
             
-            else:
-                if self.win_condition:
-                    # Tela de Vitória
-                    self.screen.fill((20, 100, 20))
-                    font = pygame.font.Font(None, 48)
-                    texto = font.render("Você Venceu! Pressione ESPAÇO.", True, (255, 255, 255))
-                    rect_texto = texto.get_rect(center=(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2))
-                    self.screen.blit(texto, rect_texto)
+            # Estado: VITÓRIA
+            elif self.game_state == 'win':
+                self.screen.fill((20, 100, 20))
+                font = pygame.font.Font(None, 48)
+                texto = font.render("Você Venceu! Pressione ESPAÇO.", True, (255, 255, 255))
+                rect_texto = texto.get_rect(center=(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2))
+                self.screen.blit(texto, rect_texto)
+                self.draw_end_game_report(WINDOW_HEIGHT / 2 + 50)
 
-                    self.draw_end_game_report(WINDOW_HEIGHT / 2 + 50)
-                else:
-                    # Tela de Game Over
-                    self.screen.fill((0, 0, 0))
-                    font = pygame.font.Font(None, 48)
-                    texto = font.render("Game Over! Pressione ESPAÇO para reiniciar.", True, (255, 255, 255))
-                    rect_texto = texto.get_rect(center=(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2))
-                    self.screen.blit(texto, rect_texto)
-
-                    self.draw_end_game_report(WINDOW_HEIGHT / 2 + 50)
+            # Estado: GAME OVER
+            elif self.game_state == 'game_over':
+                self.screen.fill((0, 0, 0))
+                font = pygame.font.Font(None, 48)
+                texto = font.render("Game Over! Pressione ESPAÇO para reiniciar.", True, (255, 255, 255))
+                rect_texto = texto.get_rect(center=(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2))
+                self.screen.blit(texto, rect_texto)
+                self.draw_end_game_report(WINDOW_HEIGHT / 2 + 50)
             
+            # Atualiza a tela inteira no final do loop, independentemente do estado
             pygame.display.flip()
 
     def draw_end_game_report(self, y_start):
