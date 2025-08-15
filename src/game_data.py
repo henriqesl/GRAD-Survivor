@@ -41,7 +41,8 @@ GAME_SETUP = {
     'initial_spawn_interval': 2000,
     'spawn_interval_reduction': 200,
     'min_spawn_interval': 500,
-    'spawn_points': [(20, 85), (20, 525), (780, 525), (780, 85)],
+    'spawn_points': [(35, 85), (35, 525), (765
+    , 525), (765, 85)],
     'robot_spawn_wave_start': 3,
     'robot_spawn_chance': 0.3
 }
