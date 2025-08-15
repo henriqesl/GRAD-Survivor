@@ -49,27 +49,36 @@ Essa arquitetura modular não só organiza o projeto de forma lógica, mas tamb�
 
 
 
-.
+GRAD-SURVIVOR/
+│
+├── .gitignore
+├── main.py
+├── README.md
+│
 ├── assets/
-│   ├── images/         # Sprites, mapas, ícones
-│   └── sounds/         # Música e efeitos sonoros
+│   ├── images/
+│   │   ├── sprites/
+│   │   ├── maps/
+│   │   └── icons/
+│   │
+│   └── sounds/
+│       ├── music/
+│       └── sfx/
 │
-├── grad_survivor/      # Módulo principal do jogo
-│   ├── init.py
-│   ├── game.py         # Orquestrador central, loop principal e gerenciador de estados
-│   ├── player.py       # Classe do jogador (movimento, vida, power-ups)
-│   ├── enemies.py      # Classes base e específicas dos inimigos (Monstro, Robo)
-│   ├── monster_manager.py # Lógica de spawn e controle das hordas (waves)
-│   ├── mouse.py        # Classe do projétil
-│   ├── collectible_items.py # Lógica de drop e aplicação de efeitos dos itens
-│   ├── pathfinding.py  # Implementação do algoritmo A* para a IA
-│   ├── obstacles.py    # Definição dos obstáculos fixos do mapa
-│   ├── end_screens.py  # UI e lógica para as telas de vitória e game over
-│   ├── tela_inicial.py # UI e lógica para a tela de início e cutscene
-│   ├── settings.py     # Configurações globais (tamanho da tela, FPS)
-│   └── game_data.py    # "Banco de dados" do jogo (stats de entidades, paths, etc.)
-│
-└── main.py             # Ponto de entrada do programa
+└── grad_survivor/
+    ├── __init__.py
+    ├── settings.py
+    ├── game_data.py
+    ├── game.py
+    ├── player.py
+    ├── enemies.py
+    ├── monster_manager.py
+    ├── collectible_items.py
+    ├── mouse.py
+    ├── obstacles.py
+    ├── pathfinding.py
+    ├── tela_inicial.py
+    └── end_screens.py
 
 
 ---
