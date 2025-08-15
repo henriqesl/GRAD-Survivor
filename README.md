@@ -10,7 +10,7 @@
 
 | Membro | Responsabilidades Principais |
 | :--- | :--- |
-| **Henrique** | **[Líder Técnico / Gameplay]** -  lógica de tiro (`mouse.py`), integração do core (`game.py`), sistema de vida e música. |
+| **Henrique Lima** | **[Líder Técnico / Gameplay]** -  lógica de tiro (`mouse.py`), integração do core (`game.py`), sistema de vida e música. |
 | **Lucas Fernandes** | **[Desenvolvedor de Gameplay]** - Implementação do jogador (`player.py`), sistema de itens coletáveis, UI (contadores) e lógica de vitória. |
 | **Júnior Cruz** | **[Desenvolvedor de Gameplay]** - Implementação do sistema de obstáculos e colisões, e ajustes na física dos monstros. |
 | **Guilherme Siqueira** | **[Desenvolvedor de IA]** - Lógica de perseguição dos monstros (`enemies.py`) e integração da IA com o jogo principal. |
