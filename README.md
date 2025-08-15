@@ -6,16 +6,49 @@
 **GRAD-Survivor** é um jogo de ação e sobrevivência do gênero *top-down shooter*, onde o jogador assume o papel de um estudante tentando sobreviver a uma noite caótica no prédio da graduação. Enfrentando hordas crescentes de monstros, o jogador deve usar sua agilidade e power-ups — como Red Bulls para aumentar a velocidade e Subways para recuperar vida — para derrotar os inimigos e aguentar até o fim.
 ---
 
+## 📖 História
+
+A noite de sexta-feira prometia ser longa. No silêncio do prédio da graduação, um estudante dedicado corria contra o tempo para finalizar o temido projeto de Introdução à Programação. O café já não fazia efeito, e o cansaço começava a pesar. De repente, um barulho estranho ecoa pelos corredores vazios — um som que não pertencia àquele lugar.
+
+Ao investigar, o estudante se depara com uma cena de pesadelo: a universidade foi invadida por criaturas bizarras, nascidas do estresse acadêmico e de códigos que deram errado. Armado apenas com sua coragem (e uma habilidade recém-descoberta de atirar cursores de mouse), ele precisa sobreviver a hordas de monstros até o amanhecer para, finalmente, entregar seu projeto.
+
+---
+
+## 🎮 Como Jogar
+
+O objetivo é simples: sobreviver o maior tempo possível, derrotando todas as hordas de inimigos.
+
+### Controles
+* **Movimentação:** Use as teclas `W`, `A`, `S`, `D` para mover o personagem.
+* **Mira:** A mira segue o cursor do seu mouse.
+* **Atirar:** Clique com o **botão esquerdo do mouse** para disparar.
+
+### Power-Ups
+Ao derrotar inimigos, itens especiais podem aparecer. Pegue-os para ganhar vantagens:
+* **Red Bull:** Aumenta temporariamente a sua velocidade de movimento.
+* **Subway:** Recupera um coração de vida instantaneamente.
+* **Crachá:** Aumenta temporariamente a sua velocidade de tiro.
+
+---
+
+## 🖼️ Galeria
+
+| Tela Inicial | Gameplay Intenso | Fim de Jogo |
+| :---: | :---: | :---: |
+| ![Tela de Início do GRAD-Survivor](assets/images/inicio.png) | ![Gameplay do GRAD-Survivor](assets/images/win.png) | ![Tela de Game Over do GRAD-Survivor](assets/images/gameover.png) |
+
+---
+
 ## 👥 Equipe e Divisão de Tarefas
 
-| Membro | Responsabilidades Principais |
-| :--- | :--- |
-| **Henrique Lima** | **[Líder Técnico / Gameplay]** -  lógica de tiro (`mouse.py`), integração do core (`game.py`), sistema de vida e música. |
-| **Lucas Fernandes** | **[Desenvolvedor de Gameplay]** - Implementação do jogador (`player.py`), sistema de itens coletáveis, UI (contadores) e lógica de vitória. |
-| **Júnior Cruz** | **[Desenvolvedor de Gameplay]** - Implementação do sistema de obstáculos e colisões, e ajustes na física dos monstros. |
-| **Guilherme Siqueira** | **[Desenvolvedor de IA]** - Lógica de perseguição dos monstros (`enemies.py`) e integração da IA com o jogo principal. |
-| **Luiz Taiguara** | **[Gerente de Projeto / Arquiteto]** - Organização da equipe, Gerenciamento do repositório (GitHub), definição da arquitetura modular, refatoração de código e apresentações. |
-| **Tiago Mattos** | **[Artista 2D / Designer de UI]** - Criação de todos os assets visuais (mapa, personagens, itens) e implementação do código da tela de início e das imagens de fim de jogo. |
+| Foto | Membro | Responsabilidades Principais |
+| :---: | :--- | :--- |
+| <img src="https://github.com/henrique-github.png?size=100" width="100" alt="https://avatars.githubusercontent.com/u/163488602?v=4"> | [**Henrique**](https://github.com/henriqesl-github) | **[Líder Técnico / Gameplay]** - Lógica de tiro (`mouse.py`), integração do core (`game.py`), sistema de vida e música. |
+| <img src="https://github.com/lucas-fernandes-github.png?size=100" width="100" alt="https://avatars.githubusercontent.com/u/207383959?v=4"> | [**Lucas Fernandes**](https://github.com/LucasFernandesCS) | **[Desenvolvedor de Gameplay]** - Implementação do jogador (`player.py`), sistema de itens coletáveis, UI (contadores) e lógica de vitória. |
+| <img src="https://github.com/junior-cruz-github.png?size=100" width="100" alt="https://avatars.githubusercontent.com/u/224153797?v=4"> | [**Júnior Cruz**](https://github.com/juniorcruz7) | **[Desenvolvedor de Gameplay]** - Implementação do sistema de obstáculos e colisões, e ajustes na física dos monstros. |
+| <img src="https://github.com/guilherme-siqueira-github.png?size=100" width="100" alt="https://avatars.githubusercontent.com/u/212376548?v=4"> | [**Guilherme Siqueira**](https://github.com/guimontenegro07) | **[Desenvolvedor de IA]** - Lógica de perseguição dos monstros (`enemies.py`) e integração da IA com o jogo principal. |
+| <img src="https://github.com/luiz-taiguara-github.png?size=100" width="100" alt="https://avatars.githubusercontent.com/u/172301670?v=4"> | [**Luiz Taiguara**](https://github.com/LuizTaiguara) | **[Gerente de Projeto / Arquiteto]** - Organização da equipe, Gerenciamento do repositório (GitHub), definição da arquitetura modular, refatoração de código e apresentações. |
+| <img src="https://github.com/tiago-mattos-github.png?size=100" width="100" alt="https://avatars.githubusercontent.com/u/223951608?v=4"> | [**Tiago Mattos**](https://github.com/tiagolmattos06) | **[Artista 2D / Designer de UI]** - Criação de todos os assets visuais (mapa, personagens, itens) e implementação do código da tela de início e das imagens de fim de jogo. |
 
 ---
 
@@ -31,7 +64,7 @@ O progresso da **Equipe 7** foi dividido em ciclos curtos, refletidos nos checkp
 
 ## 🏗️ Arquitetura e Estrutura do Projeto
 
-Nossa arquitetura projetada para ser **modular e centralizada**, com os princípios importantes para o construção de softwares, criando uma base de código limpa, eficiente e passível de expansão.
+Nossa arquitetura foi projetada para ser **modular e centralizada**, aplicando princípios importantes para a construção de softwares e criando uma base de código limpa, eficiente e passível de expansão.
 
 ### Visão Geral da Arquitetura
 
@@ -47,8 +80,7 @@ Essa arquitetura modular não só organiza o projeto de forma lógica, mas tamb�
 
 ### Estrutura dos Diretórios e Arquivos
 
-
-
+```
 GRAD-SURVIVOR/
 │
 ├── .gitignore
@@ -65,28 +97,21 @@ GRAD-SURVIVOR/
 │       ├── music/
 │       └── sfx/
 │
-└── grad_survivor/
-    ├── __init__.py
-    ├── settings.py
-    ├── game_data.py
-    ├── game.py
-    ├── player.py
-    ├── enemies.py
-    ├── monster_manager.py
-    ├── collectible_items.py
-    ├── mouse.py
-    ├── obstacles.py
-    ├── pathfinding.py
-    ├── tela_inicial.py
-    └── end_screens.py
-
----
-
-## 🖼️ Galeria
-
-| Tela Inicial | Gameplay | Tela de Game Over |
-| :---: | :---: | :---: |
-| ![Tela Inicial](caminho/para/imagem_inicial.png) | ![Gameplay](caminho/para/imagem_gameplay.png) | ![Game Over](caminho/para/imagem_gameover.png) |
+└── src/  (ou grad_survivor/)
+├── init.py
+├── settings.py
+├── game_data.py
+├── game.py
+├── player.py
+├── enemies.py
+├── monster_manager.py
+├── collectible_items.py
+├── mouse.py
+├── obstacles.py
+├── pathfinding.py
+├── tela_inicial.py
+└── end_screens.py
+```
 
 ---
 
@@ -128,19 +153,21 @@ Finalmente, adotamos o paradigma de **Programação Orientada a Objetos (POO)** 
 
 ## 🎯 Desafios e Lições Aprendidas
 
+#### Qual foi o maior erro cometido durante o projeto? Como vocês lidaram com ele?
 
 Nosso maior erro foi subestimar a complexidade da integração entre os diferentes sistemas do jogo. No início, a lógica de colisão dos obstáculos e a inteligência artificial dos inimigos foram desenvolvidas de forma isolada. Quando tentamos implementar o algoritmo de pathfinding, percebemos que a IA não "enxergava" os obstáculos, fazendo com que os inimigos ficassem presos.
 
 **Como lidamos:** Tivemos que refatorar parte da inicialização do jogo. Criamos uma função que, ao carregar o mapa, converte as posições de todos os obstáculos em uma matriz que serve como um "mapa mental" para a IA. Isso nos ensinou a importância de planejar como os sistemas irão interagir desde o começo.
 
+#### Qual foi o maior desafio enfrentado durante o projeto? Como vocês lidaram com ele?
 
 O maior desafio foi a **gestão do projeto e a comunicação da equipe**. Com cada membro desenvolvendo uma parte diferente, a tarefa de juntar as peças e unificar as ideias em um todo coeso foi complexa. Isso se refletiu no desafio técnico de utilizar o **GitHub**, uma ferramenta nova para a maioria, onde a dificuldade em gerenciar versões do código e resolver conflitos (*merge*) gerou atrasos.
 
 **Como lidamos:** Superamos isso com comunicação constante e um fluxo de trabalho mais organizado. O membro com mais experiência em Git auxiliou os demais, e passamos a alinhar melhor as integrações. Esse processo, embora desafiador, se tornou um dos maiores aprendizados práticos sobre desenvolvimento do projeto.
 
-#### Aprendizados - Como esse projeto impactou na nossa formação
+#### Quais as lições aprendidas durante o projeto?
 
-1.  **A Arquitetura como guia:** Aprendemos que planejar uma boa arquitetura, usando conceitos de Programação Orientada a Objetos, não é um luxo, mas uma necessidade. Isso torna o código mais fácil de gerenciar, depurar e expandir.
+1.  **A Arquitetura Define o Sucesso:** Aprendemos que planejar uma boa arquitetura, usando conceitos de Programação Orientada a Objetos, não é um luxo, mas uma necessidade. Isso torna o código mais fácil de gerenciar, depurar e expandir.
 2.  **Ferramentas de Colaboração São Essenciais:** Entendemos que o domínio de ferramentas como o Git é tão importante quanto saber programar. A capacidade de versionar e gerenciar o código de forma organizada é indispensável para o sucesso de qualquer projeto em equipe.
-3.  **Refatorar Faz Parte:** Um código que funciona nem sempre é um código bom. Aprendemos a revisar e melhorar trechos do nosso próprio trabalho para aumentar a eficiência e a legibilidade, uma prática constante para garantir a qualidade do projeto.
-4.  **foco numa base sólida, para depois detalhar:** A abordagem de criar um protótipo funcional primeiro e depois adicionar novas funcionalidades (como a IA avançada e a parte visual e história) nos permitiu ter um controle maior sobre o projeto e evitou que nos sentíssemos sobrecarregados.
+3.  **Refatorar Faz Parte do Processo:** Um código que funciona nem sempre é um código bom. Aprendemos a revisar e melhorar trechos do nosso próprio trabalho para aumentar a eficiência e a legibilidade, uma prática constante para garantir a qualidade do projeto.
+4.  **Comece Simples, Adicione Complexidade:** A abordagem de criar um protótipo funcional primeiro e depois adicionar novas funcionalidades (como a IA avançada) nos permitiu ter um controle maior sobre o projeto e evitou que nos sentíssemos sobrecarregados.
