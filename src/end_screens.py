@@ -3,16 +3,10 @@ import math
 import random
 from .settings import WINDOW_WIDTH, WINDOW_HEIGHT, HUD_HEIGHT
 
-
-def clamp_color(value):
-    """Garante que o valor de cor está entre 0 e 255 como inteiro."""
-    return max(0, min(255, int(value)))
-
-
-def safe_color(r, g, b):
-    """Retorna uma tupla de cor segura (R, G, B) com inteiros válidos."""
-    return (clamp_color(r), clamp_color(g), clamp_color(b))
-
+# --- Função auxiliar para garantir cor válida ---
+def safe_color(*values):
+    """Converte valores para int e garante que fiquem no intervalo 0-255."""
+    return tuple(max(0, min(255, int(v))) for v in values)
 
 class EndGameReportMixin:
     def draw_end_game_report(self, screen, itens_coletados, inimigos_eliminados, y_start):
@@ -40,10 +34,9 @@ class EndGameReportMixin:
 
 
 class WinScreen(EndGameReportMixin):
-    def __init__(self, screen, itens_coletados, inimigos_eliminados):
-        self.screen = screen
-        self.itens_coletados = itens_coletados
-        self.inimigos_eliminados = inimigos_eliminados
+    def __init__(self, game):
+        self.game = game
+        self.screen = game.screen
 
         self.BRIGHT_GREEN = (50, 255, 50)
         self.GOLD = (255, 215, 0)
@@ -68,19 +61,20 @@ class WinScreen(EndGameReportMixin):
         self.win_time += 0.1
 
     def draw_text_with_glow(self, text, font, color, pos):
+        color = safe_color(*color)
         for offset in range(2, 0, -1):
             glow_alpha = 40 * offset
-            glow_surface = font.render(text, True, safe_color(*color))
+            glow_surface = font.render(text, True, color)
             glow_surface.set_alpha(glow_alpha)
             for dx in range(-offset, offset + 1):
                 for dy in range(-offset, offset + 1):
                     self.screen.blit(glow_surface, (pos[0] + dx, pos[1] + dy))
-        main_surface = font.render(text, True, safe_color(*color))
+        main_surface = font.render(text, True, color)
         self.screen.blit(main_surface, pos)
 
     def draw_win_monitor_border(self):
         pygame.draw.rect(self.screen, self.MONITOR_BORDER, (0, 0, WINDOW_WIDTH, WINDOW_HEIGHT))
-        pygame.draw.rect(self.screen, (20, 80, 20), (20, 20, WINDOW_WIDTH-40, WINDOW_HEIGHT-70))
+        pygame.draw.rect(self.screen, safe_color(20, 80, 20), (20, 20, WINDOW_WIDTH-40, WINDOW_HEIGHT-70))
         led_alpha = int(127 + 127 * math.sin(self.win_time * 3))
         led_color = safe_color(led_alpha//4, 255, led_alpha//4)
         pygame.draw.circle(self.screen, led_color, (WINDOW_WIDTH - 40, WINDOW_HEIGHT - 35), 8)
@@ -110,7 +104,7 @@ class WinScreen(EndGameReportMixin):
             "UM VERDADEIRO GRAD SURVIVOR!"
         ]
         for i, line in enumerate(congratulations_lines):
-            line_surface = self.font_medium.render(line, True, (180, 255, 180))
+            line_surface = self.font_medium.render(line, True, safe_color(180, 255, 180))
             line_rect = line_surface.get_rect(center=(center_x, center_y + i * 25))
             self.screen.blit(line_surface, line_rect)
         blink_alpha = int(127 + 127 * math.sin(self.win_time * 5))
@@ -122,19 +116,19 @@ class WinScreen(EndGameReportMixin):
 
     def draw(self):
         for y in range(WINDOW_HEIGHT):
-            shade = clamp_color(20 + 10 * math.sin(y * 0.01))
-            pygame.draw.line(self.screen, safe_color(0, shade, 0), (0, y), (WINDOW_WIDTH, y))
+            shade = 20 + 10 * math.sin(y * 0.01)
+            color = safe_color(0, shade, 0)
+            pygame.draw.line(self.screen, color, (0, y), (WINDOW_WIDTH, y))
         self.draw_win_monitor_border()
         self.draw_win_scanlines()
         self.draw_win_content()
-        self.draw_end_game_report(self.screen, self.itens_coletados, self.inimigos_eliminados, WINDOW_HEIGHT / 2 + 180)
+        self.draw_end_game_report(self.screen, self.game.itens_coletados, self.game.inimigos_eliminados, WINDOW_HEIGHT / 2 + 180)
 
 
 class GameOverScreen(EndGameReportMixin):
-    def __init__(self, screen, itens_coletados, inimigos_eliminados):
-        self.screen = screen
-        self.itens_coletados = itens_coletados
-        self.inimigos_eliminados = inimigos_eliminados
+    def __init__(self, game):
+        self.game = game
+        self.screen = game.screen
 
         self.BLACK = (0, 0, 0)
         self.RED = (255, 0, 0)
@@ -235,14 +229,15 @@ class GameOverScreen(EndGameReportMixin):
         self.screen.blit(instruction_surface, instruction_rect)
 
     def draw_text_with_glow(self, text, font, color, pos):
+        color = safe_color(*color)
         for offset in range(2, 0, -1):
             glow_alpha = 40 * offset
-            glow_surface = font.render(text, True, safe_color(*color))
+            glow_surface = font.render(text, True, color)
             glow_surface.set_alpha(glow_alpha)
             for dx in range(-offset, offset + 1):
                 for dy in range(-offset, offset + 1):
                     self.screen.blit(glow_surface, (pos[0] + dx, pos[1] + dy))
-        main_surface = font.render(text, True, safe_color(*color))
+        main_surface = font.render(text, True, color)
         self.screen.blit(main_surface, pos)
 
     def update(self, dt):
@@ -250,7 +245,7 @@ class GameOverScreen(EndGameReportMixin):
 
     def draw(self):
         for y in range(WINDOW_HEIGHT):
-            shade = clamp_color(10 + 15 * math.sin(y * 0.01))
+            shade = 10 + 15 * math.sin(y * 0.01)
             color = safe_color(shade, shade, shade + 10)
             pygame.draw.line(self.screen, color, (0, y), (WINDOW_WIDTH, y))
         self.draw_monitor_border()
@@ -258,4 +253,4 @@ class GameOverScreen(EndGameReportMixin):
         self.draw_scanlines()
         self.draw_crack_overlay()
         self.draw_game_over_content()
-        self.draw_end_game_report(self.screen, self.itens_coletados, self.inimigos_eliminados, WINDOW_HEIGHT / 2 + 180)
+        self.draw_end_game_report(self.screen, self.game.itens_coletados, self.game.inimigos_eliminados, WINDOW_HEIGHT / 2 + 180)

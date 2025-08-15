@@ -176,7 +176,7 @@ class TelaInicial:
         self.screen.blit(grad_text, grad_rect)
         
         # SURVIVE
-        survive_text = font_large.render("SURVIVE", True, title_color)
+        survive_text = font_large.render("SURVIVOR", True, title_color)
         survive_rect = survive_text.get_rect(center=(WINDOW_WIDTH//2, WINDOW_HEIGHT//2 - 30))
         self.screen.blit(survive_text, survive_rect)
         

@@ -6,7 +6,7 @@ from .monster_manager import MonsterManager, EVENTO_SPAWN_MONSTRO
 from .collectible_items import drop_item, aplicar_poder
 from . import game_data
 from .tela_inicial import TelaInicial
-from .end_screens import WinScreen, GameOverScreen  # <<< import das telas
+from .end_screens import WinScreen, GameOverScreen
 
 class Game:
     def __init__(self):
@@ -34,7 +34,7 @@ class Game:
         self.collectible_items = pygame.sprite.Group()
 
         self.monster_manager = MonsterManager(self.all_sprites, self.monster_sprites, self.collision_sprites, self)
-        
+
         self.itens_coletados = {'cracha': 0, 'redbull': 0, 'subway': 0}
         self.inimigos_eliminados = 0
 
@@ -57,9 +57,9 @@ class Game:
             for name, data in game_data.ITEM_DATA.items()
         }
 
-        # Telas de vitória e game over
-        self.win_screen = WinScreen(self.screen, self.itens_coletados, self.inimigos_eliminados)
-        self.game_over_screen = GameOverScreen(self.screen, self.itens_coletados, self.inimigos_eliminados)
+        # Telas recebem a referência do jogo
+        self.win_screen = WinScreen(self)
+        self.game_over_screen = GameOverScreen(self)
 
     def create_grid(self):
         from .settings import TILE_SIZE, MAP_WIDTH, MAP_HEIGHT
@@ -69,13 +69,12 @@ class Game:
         self.grid = [[0 for _ in range(grid_width)] for _ in range(grid_height)]
 
         for obstacle in self.collision_sprites:
-            # Esta nova lógica funciona para obstáculos de qualquer tamanho
             for x in range(obstacle.rect.left, obstacle.rect.right, TILE_SIZE):
                 for y in range(obstacle.rect.top, obstacle.rect.bottom, TILE_SIZE):
                     grid_x = x // TILE_SIZE
                     grid_y = y // TILE_SIZE
                     if 0 <= grid_y < grid_height and 0 <= grid_x < grid_width:
-                        self.grid[grid_y][grid_x] = 1 # Marca a célula como obstáculo
+                        self.grid[grid_y][grid_x] = 1
 
     def reset_game(self):
         self.player_principal.reset()
@@ -93,7 +92,6 @@ class Game:
         while True:
             dt = self.clock.tick(FPS) / 1000
 
-            # --- PROCESSAMENTO DE EVENTOS ---
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
@@ -120,7 +118,6 @@ class Game:
                         self.reset_game()
                         self.game_state = 'playing'
 
-            # --- LÓGICA E DESENHO BASEADOS NO ESTADO ---
             if self.game_state == 'start_screen':
                 self.tela_inicial.update_tela_inicial()
 
@@ -173,29 +170,6 @@ class Game:
                 self.game_over_screen.draw()
 
             pygame.display.flip()
-
-    def draw_end_game_report(self, y_start):
-        font_titulo = pygame.font.Font(None, 32) 
-        font_item = pygame.font.Font(None, 28)
-        cor_texto = (255, 255, 255)
-        y_offset = y_start
-        
-        inimigos_texto = font_titulo.render(f"Inimigos Eliminados: {self.inimigos_eliminados}", True, cor_texto)
-        inimigos_rect = inimigos_texto.get_rect(center=(WINDOW_WIDTH / 2, y_offset))
-        self.screen.blit(inimigos_texto, inimigos_rect)
-        
-        y_offset += 20 
-        texto_relatorio = font_titulo.render("Itens Coletados:", True, cor_texto)
-        rect_relatorio = texto_relatorio.get_rect(center=(WINDOW_WIDTH / 2, y_offset))
-        self.screen.blit(texto_relatorio, rect_relatorio)
-        
-        y_offset += 20
-        for item, quantidade in self.itens_coletados.items():
-            nome_item_formatado = item.capitalize()
-            texto_item = font_item.render(f"{nome_item_formatado}: {quantidade}", True, cor_texto)
-            rect_item = texto_item.get_rect(center=(WINDOW_WIDTH / 2, y_offset))
-            self.screen.blit(texto_item, rect_item)
-            y_offset += 20
 
     def draw_ui(self):
         for i in range(self.player_principal.max_lives):
