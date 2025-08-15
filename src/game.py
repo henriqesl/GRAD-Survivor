@@ -179,14 +179,14 @@ class Game:
         self.screen.blit(inimigos_texto, inimigos_rect)
         
         # ESPAÇAMENTO DIMINUÍDO
-        y_offset += 35 
+        y_offset += 20 
 
         texto_relatorio = font_titulo.render("Itens Coletados:", True, cor_texto)
         rect_relatorio = texto_relatorio.get_rect(center=(WINDOW_WIDTH / 2, y_offset))
         self.screen.blit(texto_relatorio, rect_relatorio)
         
         # ESPAÇAMENTO DIMINUÍDO
-        y_offset += 25
+        y_offset += 20
 
         for item, quantidade in self.itens_coletados.items():
             nome_item_formatado = item.capitalize()
@@ -194,7 +194,7 @@ class Game:
             rect_item = texto_item.get_rect(center=(WINDOW_WIDTH / 2, y_offset))
             self.screen.blit(texto_item, rect_item)
             # ESPAÇAMENTO DIMINUÍDO
-            y_offset += 28 
+            y_offset += 20
 
     def draw_ui(self):
         for i in range(self.player_principal.max_lives):
