@@ -13,6 +13,9 @@ class TelaInicial:
         self.fundo_cutscene = pygame.image.load("assets/images/inicio_grad.png").convert() 
         self.fundo_cutscene = pygame.transform.scale(self.fundo_cutscene, (WINDOW_WIDTH, WINDOW_HEIGHT))
         
+        self.novo_fundo = pygame.image.load("assets/images/inicio_grad.png").convert() 
+        self.novo_fundo = pygame.transform.scale(self.novo_fundo, (WINDOW_WIDTH, WINDOW_HEIGHT))
+
         # Imagem do personagem para a cutscene
         self.personagem_img = pygame.image.load("assets/images/personagem_cutscene.png").convert_alpha()
     
@@ -34,10 +37,10 @@ class TelaInicial:
 
         # Lista de falas da cutscene
         self.cutscene_falas = [
-            "Preciso terminar esse projeto de IP o quanto antes cara...",
-            "Vou acabar tendo que virar a noite no GRAD pra concluir",
+            "Preciso terminar esse projeto de IP o quanto antes...",
+            "Vou acabar virando a noite no GRAD pra concluir isso logo.",
             "",  # Pausa para tela apagar
-            "M-Mas que barulheira é essa? quem pode ser em plena madrugada?"
+            "M-Mas que barulheira é essa? Em plena madrugada, o que será?"
         ]
         self.fala_index = 0
         self.texto_atual = ""
@@ -61,14 +64,15 @@ class TelaInicial:
         """Controla e desenha a cutscene"""
         agora = pygame.time.get_ticks()
 
-        # Cena de tela apagada (apenas fundo preto)
+        # Lógica para a pausa com a tela preta
         if self.fala_index == 2 and not self.tela_apagada:
             self.tela_apagada = True
             self.tempo_pausa = agora
-
+        
         if self.tela_apagada:
+            # Garante que a tela fique preta durante a pausa
             self.screen.fill((0, 0, 0))
-            # Espera 3 segundos e vai para próxima fala
+            
             if agora - self.tempo_pausa > 3000:
                 self.tela_apagada = False
                 self.fala_index += 1
@@ -76,16 +80,24 @@ class TelaInicial:
                 self.tempo_ultima_letra = agora
             return
 
-        # Fundo da cutscene
-        self.screen.blit(self.fundo_cutscene, (0, 0))
-        
+        # --- PARTE PRINCIPAL DO DESENHO ---
+        # 1. Fundo da cena (agora condicional)
+        if self.fala_index < 3:
+            # Se estivermos antes da pausa (índice 0, 1)
+            self.screen.blit(self.fundo_cutscene, (0, 0))
+        else:
+            # Se estivermos depois da pausa (índice 3 em diante)
+            self.screen.blit(self.novo_fundo, (0, 0))
+
+        # 2. Personagem
         pos_personagem_y = WINDOW_HEIGHT - self.personagem_img.get_height()
         self.screen.blit(self.personagem_img, (40, pos_personagem_y))
 
+        # 3. Caixa de diálogo
         pos_caixa_y = WINDOW_HEIGHT - 130 
         self.screen.blit(self.caixa_dialogo, (20, pos_caixa_y))
 
-        # Efeito de digitação
+        # 4. Texto
         if self.fala_index < len(self.cutscene_falas):
             fala = self.cutscene_falas[self.fala_index]
             if len(self.texto_atual) < len(fala) and agora - self.tempo_ultima_letra > self.velocidade_digito:
@@ -94,7 +106,7 @@ class TelaInicial:
 
             font = pygame.font.Font(None, 32)
             texto_surface = font.render(self.texto_atual, True, (255, 255, 255))
-            # --- Lógica de alinhamento do texto ---
+            
             caixa_rect_na_tela = self.caixa_dialogo.get_rect(topleft=(20, pos_caixa_y))
             texto_rect = texto_surface.get_rect()
             texto_rect.centery = caixa_rect_na_tela.centery
