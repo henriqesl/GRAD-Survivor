@@ -88,10 +88,12 @@ GRAD-SURVIVOR/
 ├── main.py
 ├── README.md
 │
+├── events_images/
+│
 ├── assets/
 │   ├── images/
 │   └── sounds/
-│   └── events_images/
+│  
 │   
 │
 └── src/ 
