@@ -6,10 +6,12 @@ from .enemies import Monstro, Robo
 EVENTO_SPAWN_MONSTRO = pygame.USEREVENT + 1
 
 class MonsterManager:
-    def __init__(self, all_sprites_group, monster_sprites_group, collision_sprites):
+    # Passo 1: Adicionar game_instance
+    def __init__(self, all_sprites_group, monster_sprites_group, collision_sprites, game_instance):
         self.all_sprites = all_sprites_group
         self.monster_sprites = monster_sprites_group
         self.collision_sprites = collision_sprites
+        self.game = game_instance # Guarda a referência do jogo
 
         self.pontos_de_spawn = game_data.GAME_SETUP['spawn_points']
         self.monsters_per_wave = game_data.GAME_SETUP['monsters_per_wave']
@@ -53,10 +55,11 @@ class MonsterManager:
 
         ponto_spawn = random.choice(self.pontos_de_spawn)
 
+        # Passo 2: Passar self.game ao criar os monstros
         if self.wave >= game_data.GAME_SETUP['robot_spawn_wave_start'] and random.random() < game_data.GAME_SETUP['robot_spawn_chance']:
-            monstro = Robo(ponto_spawn, self.velocidade_robot, self.collision_sprites)
+            monstro = Robo(ponto_spawn, self.velocidade_robot, self.collision_sprites, self.game)
         else:
-            monstro = Monstro(ponto_spawn, self.velocidade_monstro, self.collision_sprites)
+            monstro = Monstro(ponto_spawn, self.velocidade_monstro, self.collision_sprites, self.game)
 
         monstro.aumentar_vida(self.wave)
 

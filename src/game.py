@@ -33,15 +33,17 @@ class Game:
         self.mouse_sprites = pygame.sprite.Group()
         self.collectible_items = pygame.sprite.Group()
 
-        self.monster_manager = MonsterManager(self.all_sprites, self.monster_sprites, self.collision_sprites)
+        self.monster_manager = MonsterManager(self.all_sprites, self.monster_sprites, self.collision_sprites, self)
         
         self.itens_coletados = {'cracha': 0, 'redbull': 0, 'subway': 0}
         self.inimigos_eliminados = 0
 
         self.shoot_delay = game_data.PLAYER_DATA['shoot_delay']
         self.last_shot_time = 0
-        
+
+        self.grid = []
         Obstacles(self.collision_sprites)
+        self.create_grid()
 
         self.player_principal = Player(
             (MAP_WIDTH / 2, MAP_HEIGHT / 2),
@@ -58,6 +60,22 @@ class Game:
         # Telas de vitória e game over
         self.win_screen = WinScreen(self.screen, self.itens_coletados, self.inimigos_eliminados)
         self.game_over_screen = GameOverScreen(self.screen, self.itens_coletados, self.inimigos_eliminados)
+
+    def create_grid(self):
+        from .settings import TILE_SIZE, MAP_WIDTH, MAP_HEIGHT
+
+        grid_width = MAP_WIDTH // TILE_SIZE
+        grid_height = MAP_HEIGHT // TILE_SIZE
+        self.grid = [[0 for _ in range(grid_width)] for _ in range(grid_height)]
+
+        for obstacle in self.collision_sprites:
+            # Esta nova lógica funciona para obstáculos de qualquer tamanho
+            for x in range(obstacle.rect.left, obstacle.rect.right, TILE_SIZE):
+                for y in range(obstacle.rect.top, obstacle.rect.bottom, TILE_SIZE):
+                    grid_x = x // TILE_SIZE
+                    grid_y = y // TILE_SIZE
+                    if 0 <= grid_y < grid_height and 0 <= grid_x < grid_width:
+                        self.grid[grid_y][grid_x] = 1 # Marca a célula como obstáculo
 
     def reset_game(self):
         self.player_principal.reset()
