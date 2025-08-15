@@ -46,11 +46,13 @@ class Player(pygame.sprite.Sprite):
                 self.invincible = False
 
     def reset(self):
-        # --- Reiniciar partida ---
         self.lives = self.max_lives
-        self.rect.center = (WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2)
+        center_pos = (MAP_WIDTH / 2, MAP_HEIGHT / 2)
+        self.rect.center = center_pos
+        self.hitbox_rect.center = center_pos
         self.direction = pygame.Vector2()
         self.invincible = False
+
 
     def load_images(self):
         # --- Carregar Sprites ---
