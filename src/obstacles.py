@@ -11,10 +11,10 @@ class Obstacles:
     def __init__(self, obstaculos_group):
         # Definindo os obstáculos como instâncias da classe Obstacle
         self.obstacles = [
-            Obstacle(pygame.Rect((0, 0, 4, 600)), obstaculos_group),
-            Obstacle(pygame.Rect((796, 0, 4, 600)), obstaculos_group),
-            Obstacle(pygame.Rect((0, 0, 800, 4)), obstaculos_group),
-            Obstacle(pygame.Rect((0, 595, 800, 4)), obstaculos_group),
+            Obstacle(pygame.Rect((-50, 0, 58, 600)), obstaculos_group),
+            Obstacle(pygame.Rect((792, 0, 54, 600)), obstaculos_group),
+            Obstacle(pygame.Rect((0, 0, 800, 10)), obstaculos_group),
+            Obstacle(pygame.Rect((0, 590, 800, 10)), obstaculos_group),
             Obstacle(pygame.Rect((0, 56, 57, 3)), obstaculos_group),
             Obstacle(pygame.Rect((40, 51, 12, 5)), obstaculos_group),
             Obstacle(pygame.Rect((743, 53, 53, 3)), obstaculos_group),
