@@ -16,7 +16,7 @@ class TelaInicial:
         self.fundo_cutscene = pygame.image.load("assets/images/inicio_grad.png").convert() 
         self.fundo_cutscene = pygame.transform.scale(self.fundo_cutscene, (WINDOW_WIDTH, WINDOW_HEIGHT))
         
-        self.novo_fundo = pygame.image.load("assets/images/inicio_grad.png").convert() 
+        self.novo_fundo = pygame.image.load("assets/images/interior_grad.png").convert() 
         self.novo_fundo = pygame.transform.scale(self.novo_fundo, (WINDOW_WIDTH, WINDOW_HEIGHT))
 
         # Imagem do personagem para a cutscene
