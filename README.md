@@ -89,16 +89,11 @@ GRAD-SURVIVOR/
 │
 ├── assets/
 │   ├── images/
-│   │   ├── sprites/
-│   │   ├── maps/
-│   │   └── icons/
-│   │
 │   └── sounds/
-│       ├── music/
-│       └── sfx/
+│      
+│   
 │
-└── src/  (ou grad_survivor/)
-├── init.py
+└── src/ 
 ├── settings.py
 ├── game_data.py
 ├── game.py
