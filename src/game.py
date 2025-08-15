@@ -49,6 +49,8 @@ class Game:
         self.shoot_delay = game_data.PLAYER_DATA['shoot_delay']
         self.last_shot_time = 0
 
+        self.needs_reset = False
+
         self.grid = []
         Obstacles(self.collision_sprites)
         self.create_grid()
@@ -100,6 +102,11 @@ class Game:
         self.win_screen.reset()
         self.game_over_screen.reset()
 
+        # Reinicia a música do menu
+        pygame.mixer.music.load(self.musica_inicio)
+        pygame.mixer.music.set_volume(0.3)
+        pygame.mixer.music.play(loops=-1)
+
     def run(self):
         while True:
             dt = self.clock.tick(FPS) / 1000
@@ -131,8 +138,16 @@ class Game:
 
                 elif self.game_state in ('win', 'game_over'):
                     if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
-                        self.reset_game()
-                        self.game_state = 'playing'
+                        self.needs_reset = True
+
+            if self.needs_reset:
+                self.reset_game()
+                self.game_state = 'playing'
+
+                pygame.mixer.music.load(self.musica_principal)
+                pygame.mixer.music.set_volume(0.4) # Pode ajustar o volume
+                pygame.mixer.music.play(loops=-1)
+                self.needs_reset = False
 
             if self.game_state == 'start_screen':
                 self.tela_inicial.update_tela_inicial()
