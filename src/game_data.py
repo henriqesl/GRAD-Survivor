@@ -68,7 +68,10 @@ ITEM_DATA = {
 ASSET_PATHS = {
     'caption': "GRAD-Survivor",
     'map': 'assets/images/mapa1.0.png',
-    'music': 'assets/sounds/interstellar.mp3',
+    'music_start': 'assets/sounds/zombies.mp3',
+    'music_main': 'assets/sounds/interstellar.mp3',
+    'sound_win': 'assets/sounds/sound_win.mp3',
+    'sound_game_over': 'assets/sounds/sound_game_over.mp3',
     'heart_full': 'assets/images/coracao.png',
     'heart_empty': 'assets/images/coracao_apagado.png',
     'projectile': 'assets/images/mouse.png',

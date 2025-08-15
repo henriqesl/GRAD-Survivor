@@ -210,7 +210,7 @@ class TelaInicial:
         
         # === INFORMAÇÕES EXTRAS (CANTO INFERIOR) ===
         # Versão
-        version_text = font_small.render("by Alunos de SI", True, self.GRAY)
+        version_text = font_small.render("by Alunos de S.I", True, self.GRAY)
         self.screen.blit(version_text, (20, WINDOW_HEIGHT - 30))
         
         # Status (simulado)

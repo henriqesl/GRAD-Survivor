@@ -17,14 +17,22 @@ class Game:
         self.clock = pygame.time.Clock()
         self.map = pygame.image.load(game_data.ASSET_PATHS['map']).convert()
 
-        pygame.mixer.music.load(game_data.ASSET_PATHS['music'])
-        pygame.mixer.music.set_volume(0.3)
-
         self.game_state = 'start_screen'
         self.tela_inicial = TelaInicial(self.screen)
 
         self.heart_full_img = pygame.image.load(game_data.ASSET_PATHS['heart_full'])
         self.heart_empty_img = pygame.image.load(game_data.ASSET_PATHS['heart_empty'])
+
+        self.musica_inicio = game_data.ASSET_PATHS['music_start'] # Crie essa entrada em game_data
+        self.musica_principal = game_data.ASSET_PATHS['music_main']  # Renomeie a entrada 'music' para 'music_main'
+
+        # Efeitos Sonoros (SFX)
+        self.som_win = pygame.mixer.Sound(game_data.ASSET_PATHS['sound_win'])
+        self.som_game_over = pygame.mixer.Sound(game_data.ASSET_PATHS['sound_game_over'])
+        
+        # Ajuste de volumes (0.0 a 1.0)
+        self.som_win.set_volume(0.5)
+        self.som_game_over.set_volume(0.5)
 
         # --- GRUPOS ---
         self.all_sprites = pygame.sprite.Group()
@@ -60,6 +68,10 @@ class Game:
         # Telas recebem a referência do jogo
         self.win_screen = WinScreen(self)
         self.game_over_screen = GameOverScreen(self)
+
+        pygame.mixer.music.load(self.musica_inicio)
+        pygame.mixer.music.set_volume(0.3)
+        pygame.mixer.music.play(loops=-1)
 
     def create_grid(self):
         from .settings import TILE_SIZE, MAP_WIDTH, MAP_HEIGHT
@@ -99,6 +111,7 @@ class Game:
 
                 if self.game_state == 'start_screen':
                     if event.type == pygame.KEYDOWN:
+                        pygame.mixer.music.stop() 
                         self.game_state = 'cutscene'
                         self.tela_inicial.iniciar_cutscene()
 
@@ -107,6 +120,9 @@ class Game:
                         terminou = self.tela_inicial.avancar_fala()
                         if terminou:
                             self.game_state = 'playing'
+                            # Troca para a música principal do jogo
+                            pygame.mixer.music.load(self.musica_principal)
+                            pygame.mixer.music.set_volume(0.4)
                             pygame.mixer.music.play(loops=-1)
 
                 elif self.game_state == 'playing':
@@ -132,9 +148,14 @@ class Game:
                 self.collectible_items.update()
                 self.check_shooting()
 
-                if self.monster_manager.game_won:
+                if self.monster_manager.game_won and self.game_state != 'win':
+                    pygame.mixer.music.stop() 
+                    self.som_win.play()       
                     self.game_state = 'win'
-                if self.player_principal.lives <= 0:
+
+                if self.player_principal.lives <= 0 and self.game_state != 'game_over':
+                    pygame.mixer.music.stop()       
+                    self.som_game_over.play() 
                     self.game_state = 'game_over'
 
                 colisoes_tiro_monstro = pygame.sprite.groupcollide(self.mouse_sprites, self.monster_sprites, True, False)
