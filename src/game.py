@@ -20,7 +20,7 @@ class Game:
         pygame.mixer.music.load(game_data.ASSET_PATHS['music'])
         pygame.mixer.music.set_volume(0.4)
 
-        self.game_state = 'start_screen' # Começa na tela inicial
+        self.game_state = 'start_screen'
         self.tela_inicial = TelaInicial(self.screen)
 
         self.heart_full_img = pygame.image.load(game_data.ASSET_PATHS['heart_full'])
@@ -77,8 +77,7 @@ class Game:
         self.inimigos_eliminados = 0
 
     def run(self):
-    # A música agora só começa quando o jogo de fato inicia, e não na tela de título.
-    
+
         while True:
             dt = self.clock.tick(FPS) / 1000
 
@@ -88,11 +87,17 @@ class Game:
                     pygame.quit()
                     exit()
 
-                # Eventos da TELA INICIAL
                 if self.game_state == 'start_screen':
-                    if self.tela_inicial.handle_event(event):
-                        self.game_state = 'playing'
-                        pygame.mixer.music.play(loops=-1) # Inicia a música aqui
+                    if event.type == pygame.KEYDOWN:
+                        self.game_state = 'cutscene'
+                        self.tela_inicial.iniciar_cutscene()
+
+                elif self.game_state == 'cutscene':
+                    if event.type == pygame.KEYDOWN:
+                        terminou = self.tela_inicial.avancar_fala()
+                        if terminou:
+                            self.game_state = 'playing'
+                            pygame.mixer.music.play(loops=-1)
 
                 # Eventos DURANTE O JOGO
                 elif self.game_state == 'playing':
@@ -109,7 +114,10 @@ class Game:
             
             # Estado: TELA INICIAL
             if self.game_state == 'start_screen':
-                self.tela_inicial.update()
+                self.tela_inicial.update_tela_inicial()
+
+            elif self.game_state == 'cutscene':
+                self.tela_inicial.update_cutscene()
 
             # Estado: JOGANDO
             elif self.game_state == 'playing':
