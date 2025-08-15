@@ -25,17 +25,17 @@ Adotamos uma abordagem inspirada em **Metodologias Ágeis**, focando em flexibil
 
 Começamos desenvolvendo um **Produto Mínimo Viável (MVP)** — um protótipo simples, mas totalmente funcional, com o personagem se movendo, atirando e inimigos básicos. Com essa base sólida, pudemos iterar e desenvolver novas ideias de forma segura e organizada.
 
-O progresso da **Equipe 7** foi dividido em ciclos curtos, refletidos nos checkpoints do projeto. A cada etapa, adicionávamos novas camadas de complexidade, como sistemas de itens, IA avançada e, por fim, o design e polimento visual. Essa abordagem nos permitiu adaptar e melhorar o jogo continuamente, garantindo um resultado final coeso e divertido.
+O progresso da **Equipe 7** foi dividido em ciclos curtos, refletidos nos checkpoints do projeto. A cada etapa, adicionávamos novas camadas de complexidade, como sistemas de itens, IA avançada e, por fim, o design e polimento visual. Essa abordagem nos permitiu adaptar e melhorar o jogo continuamente, atendendo as expectativas do grupo e ajudando no nosso desenvolvimento como alunos.
 
 ---
 
 ## 🏗️ Arquitetura e Estrutura do Projeto
 
-A arquitetura do **GRAD-Survivor** foi projetada para ser **modular e centralizada**, aplicando princípios importantes de engenharia de software para criar uma base de código limpa, eficiente e fácil de expandir.
+Nossa arquitetura projetada para ser **modular e centralizada**, com os princípios importantes para o construção de softwares, criando uma base de código limpa, eficiente e passível de expansão.
 
 ### Visão Geral da Arquitetura
 
-O coração do sistema é a classe `Game` (em `game.py`), que atua como um **maestro**, orquestrando todos os outros componentes. Ela gerencia o loop principal, controla os estados do jogo (menu, gameplay, etc.) e coordena a interação entre jogador, inimigos e itens.
+O coração do sistema é a classe `Game` (em `game.py`), que atua orquestrando todos os outros componentes. Lá acontece o loop principal, que controla os estados do jogo (menu, gameplay, etc.) e coordena a interação entre jogador, inimigos e itens.
 
 As principais decisões de design incluem:
 
@@ -122,7 +122,7 @@ Finalmente, adotamos o paradigma de **Programação Orientada a Objetos (POO)** 
 
 #### Qual foi o maior erro cometido durante o projeto? Como vocês lidaram com ele?
 
-Nosso maior erro foi subestimar a complexidade da integração entre os diferentes sistemas do jogo. No início, a lógica de colisão dos obstáculos e a inteligência artificial dos inimigos foram desenvolvidas de forma isolada. Quando tentamos implementar o algoritmo de pathfinding A*, percebemos que a IA não "enxergava" os obstáculos, fazendo com que os inimigos ficassem presos.
+Nosso maior erro foi subestimar a complexidade da integração entre os diferentes sistemas do jogo. No início, a lógica de colisão dos obstáculos e a inteligência artificial dos inimigos foram desenvolvidas de forma isolada. Quando tentamos implementar o algoritmo de pathfinding, percebemos que a IA não "enxergava" os obstáculos, fazendo com que os inimigos ficassem presos.
 
 **Como lidamos:** Tivemos que refatorar parte da inicialização do jogo. Criamos uma função que, ao carregar o mapa, converte as posições de todos os obstáculos em uma matriz que serve como um "mapa mental" para a IA. Isso nos ensinou a importância de planejar como os sistemas irão interagir desde o começo.
 
