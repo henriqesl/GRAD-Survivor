@@ -35,7 +35,7 @@ Ao derrotar inimigos, itens especiais podem aparecer. Pegue-os para ganhar vanta
 
 | Tela Inicial | Gameplay Intenso | Fim de Jogo |
 | :---: | :---: | :---: |
-| ![Tela de Início do GRAD-Survivor](assets/images/inicio.png) | ![Gameplay do GRAD-Survivor](assets/images/win.png) | ![Tela de Game Over do GRAD-Survivor](assets/images/gameover.png) |
+| ![Tela de Início do GRAD-Survivor](assets/images/tela_inicial.png) | ![Gameplay do GRAD-Survivor](assets/images/win.png) | ![Tela de Game Over do GRAD-Survivor](assets/images/gameover.png) |
 
 ---
 
