@@ -80,7 +80,6 @@ GRAD-SURVIVOR/
     ├── tela_inicial.py
     └── end_screens.py
 
-
 ---
 
 ## 🖼️ Galeria
