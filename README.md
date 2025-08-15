@@ -128,21 +128,19 @@ Finalmente, adotamos o paradigma de **Programação Orientada a Objetos (POO)** 
 
 ## 🎯 Desafios e Lições Aprendidas
 
-#### Qual foi o maior erro cometido durante o projeto? Como vocês lidaram com ele?
 
 Nosso maior erro foi subestimar a complexidade da integração entre os diferentes sistemas do jogo. No início, a lógica de colisão dos obstáculos e a inteligência artificial dos inimigos foram desenvolvidas de forma isolada. Quando tentamos implementar o algoritmo de pathfinding, percebemos que a IA não "enxergava" os obstáculos, fazendo com que os inimigos ficassem presos.
 
 **Como lidamos:** Tivemos que refatorar parte da inicialização do jogo. Criamos uma função que, ao carregar o mapa, converte as posições de todos os obstáculos em uma matriz que serve como um "mapa mental" para a IA. Isso nos ensinou a importância de planejar como os sistemas irão interagir desde o começo.
 
-#### Qual foi o maior desafio enfrentado durante o projeto? Como vocês lidaram com ele?
 
 O maior desafio foi a **gestão do projeto e a comunicação da equipe**. Com cada membro desenvolvendo uma parte diferente, a tarefa de juntar as peças e unificar as ideias em um todo coeso foi complexa. Isso se refletiu no desafio técnico de utilizar o **GitHub**, uma ferramenta nova para a maioria, onde a dificuldade em gerenciar versões do código e resolver conflitos (*merge*) gerou atrasos.
 
 **Como lidamos:** Superamos isso com comunicação constante e um fluxo de trabalho mais organizado. O membro com mais experiência em Git auxiliou os demais, e passamos a alinhar melhor as integrações. Esse processo, embora desafiador, se tornou um dos maiores aprendizados práticos sobre desenvolvimento do projeto.
 
-#### Quais as lições aprendidas durante o projeto?
+#### Aprendizados - Como esse projeto impactou na nossa formação
 
-1.  **A Arquitetura Define o Sucesso:** Aprendemos que planejar uma boa arquitetura, usando conceitos de Programação Orientada a Objetos, não é um luxo, mas uma necessidade. Isso torna o código mais fácil de gerenciar, depurar e expandir.
+1.  **A Arquitetura como guia:** Aprendemos que planejar uma boa arquitetura, usando conceitos de Programação Orientada a Objetos, não é um luxo, mas uma necessidade. Isso torna o código mais fácil de gerenciar, depurar e expandir.
 2.  **Ferramentas de Colaboração São Essenciais:** Entendemos que o domínio de ferramentas como o Git é tão importante quanto saber programar. A capacidade de versionar e gerenciar o código de forma organizada é indispensável para o sucesso de qualquer projeto em equipe.
-3.  **Refatorar Faz Parte do Processo:** Um código que funciona nem sempre é um código bom. Aprendemos a revisar e melhorar trechos do nosso próprio trabalho para aumentar a eficiência e a legibilidade, uma prática constante para garantir a qualidade do projeto.
-4.  **Comece Simples, Adicione Complexidade:** A abordagem de criar um protótipo funcional primeiro e depois adicionar novas funcionalidades (como a IA avançada) nos permitiu ter um controle maior sobre o projeto e evitou que nos sentíssemos sobrecarregados.
+3.  **Refatorar Faz Parte:** Um código que funciona nem sempre é um código bom. Aprendemos a revisar e melhorar trechos do nosso próprio trabalho para aumentar a eficiência e a legibilidade, uma prática constante para garantir a qualidade do projeto.
+4.  **foco numa base sólida, para depois detalhar:** A abordagem de criar um protótipo funcional primeiro e depois adicionar novas funcionalidades (como a IA avançada e a parte visual e história) nos permitiu ter um controle maior sobre o projeto e evitou que nos sentíssemos sobrecarregados.
